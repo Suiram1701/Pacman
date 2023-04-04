@@ -8,6 +8,7 @@
         WindowStartupLocation="CenterScreen"
         Title="Pacman" Height="864" Width="658" ResizeMode="NoResize">
     <Grid>
-        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
+        <Image x:Name="hi" Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
+        <Canvas x:Name="Canvas"/>
     </Grid>
 </Window>
