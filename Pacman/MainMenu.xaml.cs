@@ -14,14 +14,15 @@ using System.Windows.Shapes;
 
 namespace Packman
 {
-    /// <summary>
-    /// Interaktionslogik für MainMenu.xaml
-    /// </summary>
     public partial class MainMenu : Window
     {
-        public MainMenu()
-        {
+        public MainMenu() =>
             InitializeComponent();
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            new Game().Show();
+            Close();
         }
     }
 }
