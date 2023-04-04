@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,6 +57,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Extension\Image.cs" />
+    <Compile Include="Style\TextureHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game.xaml.cs">
@@ -87,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Style\Textures\Map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Style\Textures\TEST.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

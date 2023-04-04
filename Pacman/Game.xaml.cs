@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Packman.Extension;
+using Packman.Style;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +22,7 @@ namespace Packman
     /// </summary>
     public partial class Game : Window
     {
-        public Game()
-        {
+        public Game() =>
             InitializeComponent();
-        }
     }
 }
