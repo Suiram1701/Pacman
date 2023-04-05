@@ -1,5 +1,5 @@
-﻿using Packman.Extension;
-using Packman.Style;
+﻿using Pacman.Extension;
+using Pacman.Style;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,14 +15,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Packman
+namespace Pacman
 {
     /// <summary>
     /// Interaktionslogik für Game.xaml
     /// </summary>
     public partial class Game : Window
     {
-        public Game() =>
+        public Game()
+        {
             InitializeComponent();
+            new Style.Pacman();
+        }
     }
 }

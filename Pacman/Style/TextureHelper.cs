@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pacman.Extension;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,14 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
-namespace Packman.Style
+namespace Pacman.Style
 {
     internal class TextureHelper : IEnumerable
     {
-        private List<Bitmap> Bitmaps { get; }
+        private List<BitmapImage> Bitmaps { get; }
         private int Rows { get; }
-        private int Coloumns { get; }
+        private int Colomns { get; }
 
         /// <summary>
         /// Init the texture helper
@@ -26,9 +28,9 @@ namespace Packman.Style
         public TextureHelper(Bitmap TextureCollection, int TextureHeight, int TextureWidht, int Rows, int Colomns)
         {
             // Setup
-            Bitmaps = new List<Bitmap>();
+            Bitmaps = new List<BitmapImage>();
             this.Rows = Rows;
-            this.Coloumns = Coloumns;
+            this.Colomns = Colomns;
             Rectangle CopyRect = new Rectangle(0, 0, TextureWidht, TextureHeight);
 
             // Get all bitmaps
@@ -37,10 +39,11 @@ namespace Packman.Style
                 for (int c = 0; c < Colomns; c++)
                 {
                     // Get bitmap
-                    Bitmaps.Add(TextureCollection.Clone(CopyRect, TextureCollection.PixelFormat));
+                    Bitmaps.Add(TextureCollection.Clone(CopyRect, TextureCollection.PixelFormat).ToImage());
                     CopyRect.X += c * TextureWidht;
                 }
                 CopyRect.Y += r * TextureHeight;
+                CopyRect.X = 0;
             }
         }
 
@@ -49,7 +52,7 @@ namespace Packman.Style
         /// </summary>
         /// <param name="index">Textures index</param>
         /// <returns>The texture. When the index is the return value <see langword="null"/></returns>
-        public Bitmap this[int index]
+        public BitmapImage this[int index]
         {
             get
             {
@@ -66,11 +69,11 @@ namespace Packman.Style
         /// <param name="Row">Textures row</param>
         /// <param name="Colomn">Textures colomn</param>
         /// <returns>The texture. When the row or colomn isnt valid is the return value <see langword="null"/></returns>
-        public Bitmap this[int Row, int Colomn]
+        public BitmapImage this[int Row, int Colomn]
         {
             get
             {
-                int index = Row * Coloumns + Colomn;
+                int index = Row * Colomns + Colomn;
                 if (index >= Bitmaps.Count())
                     return null;
                 return Bitmaps[index];

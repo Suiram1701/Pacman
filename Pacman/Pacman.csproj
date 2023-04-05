@@ -58,7 +58,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extension\Image.cs" />
+    <Compile Include="Style\Pacman.cs" />
     <Compile Include="Style\TextureHelper.cs" />
+    <Compile Include="Style\Textures\Textures.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Textures.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game.xaml.cs">
@@ -90,6 +96,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Style\Textures\Map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Style\Textures\Pacman.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Style\Textures\Textures.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Textures.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
