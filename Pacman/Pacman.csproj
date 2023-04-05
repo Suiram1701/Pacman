@@ -58,7 +58,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extension\Image.cs" />
-    <Compile Include="Style\Pacman.cs" />
+    <Compile Include="Style\IFigure.cs" />
+    <Compile Include="Style\Pacman.xaml.cs">
+      <DependentUpon>Pacman.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Style\TextureHelper.cs" />
     <Compile Include="Style\Textures\Textures.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -86,6 +89,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\Pacman.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

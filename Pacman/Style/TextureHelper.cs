@@ -40,9 +40,9 @@ namespace Pacman.Style
                 {
                     // Get bitmap
                     Bitmaps.Add(TextureCollection.Clone(CopyRect, TextureCollection.PixelFormat).ToImage());
-                    CopyRect.X += c * TextureWidht;
+                    CopyRect.X += TextureWidht;
                 }
-                CopyRect.Y += r * TextureHeight;
+                CopyRect.Y += TextureHeight;
                 CopyRect.X = 0;
             }
         }

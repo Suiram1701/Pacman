@@ -4,11 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pacman"
+        xmlns:Style="clr-namespace:Pacman.Style"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Pacman" Height="864" Width="658" ResizeMode="NoResize">
     <Grid>
         <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
-        <Canvas x:Name="Canvas" Panel.ZIndex="1"/>
+        <Canvas x:Name="Canvas" Panel.ZIndex="1">
+            <Style:Pacman Canvas.Left="309" Canvas.Top="603"/>
+        </Canvas>
     </Grid>
 </Window>

@@ -25,7 +25,6 @@ namespace Pacman
         public Game()
         {
             InitializeComponent();
-            new Style.Pacman();
         }
     }
 }
