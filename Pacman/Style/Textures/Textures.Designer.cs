@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Packman.Style.Textures {
+namespace Pacman.Style.Textures {
     using System;
     
     
