@@ -91,8 +91,5 @@
   <ItemGroup>
     <Resource Include="Style\Textures\Map.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Style\Textures\TEST.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
