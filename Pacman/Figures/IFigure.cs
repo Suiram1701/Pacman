@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Media.Animation;
 
 namespace Pacman.Figures
@@ -23,6 +24,8 @@ namespace Pacman.Figures
         /// </summary>
         Direction Direction { get; set; }
 
+        Timer Timer { get; }
+
         /// <summary>
         ///  Storyboard for animation
         /// </summary>
@@ -34,13 +37,13 @@ namespace Pacman.Figures
         bool IsAnimated { get; set; }
 
         /// <summary>
-        /// Start animation
+        /// Start animation and movement
         /// </summary>
-        void StartAnimation();
+        void Start();
 
         /// <summary>
-        /// Stop animation
+        /// Stop animation and movement
         /// </summary>
-        void EndAnimation();
+        void Stop();
     }
 }

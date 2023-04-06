@@ -10,9 +10,9 @@
         Title="Pacman" Height="864" Width="658" ResizeMode="NoResize"
         KeyUp="Window_KeyUp">
     <Grid>
-        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
+        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0" Margin="0,1,0,-1"/>
         <Canvas x:Name="Canvas" Panel.ZIndex="1">
-            <Figures:Pacman x:Name="Pacman" Canvas.Left="302" Canvas.Top="588" Direction="Down"/>
+            <Figures:Pacman x:Name="Pacman" Canvas.Left="338" Canvas.Top="597" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         </Canvas>
     </Grid>
 </Window>
