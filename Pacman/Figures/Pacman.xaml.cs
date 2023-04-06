@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
 
 namespace Pacman.Figures
 {
@@ -16,6 +15,9 @@ namespace Pacman.Figures
     /// </summary>
     public partial class Pacman : UserControl, IFigure
     {
+        /// <summary>
+        /// A Texture helper to manage figures textures
+        /// </summary>
         private static TextureHelper TextureHelper { get; } = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
 
         /// <summary>
@@ -32,15 +34,21 @@ namespace Pacman.Figures
                 // Change texture direction
                 if (value != 0)
                 {
+                    // Replace key frames and reload animation
+                    Story.Stop();
                     AnimationKeyFrames[0].Value = TextureHelper[0, 0];
                     AnimationKeyFrames[1].Value = TextureHelper[(int)value, 0];
                     AnimationKeyFrames[2].Value = TextureHelper[(int)value, 1];
+                    Story.Begin();
                 }
                 else
                 {
+                    // Replace key frames and reload animation
+                    Story.Stop();
                     AnimationKeyFrames[0].Value = TextureHelper[0, 0];
                     AnimationKeyFrames[1].Value = TextureHelper[0, 0];
                     AnimationKeyFrames[2].Value = TextureHelper[0, 0];
+                    Story.Begin();
                 }
             }
         }

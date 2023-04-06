@@ -10,9 +10,9 @@ namespace Pacman.Figures
     public enum Direction
     {
         None = 0,
-        Left = 1,
+        Right = 1,
         Down = 2,
-        Right = 3,
+        Left = 3,
         Up = 4,
     }
 

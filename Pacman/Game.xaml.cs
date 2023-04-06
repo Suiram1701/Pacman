@@ -14,6 +14,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Packman.Properties.Settings;
+using Pacman.Figures;
 
 namespace Pacman
 {
@@ -25,6 +27,26 @@ namespace Pacman
         public Game()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Ckeck if move direction of pacman change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == (Key)Default.Control_Left)
+                Pacman.Direction = Direction.Left;
+
+            else if (e.Key == (Key)Default.Control_Down)
+                Pacman.Direction = Direction.Down;
+
+            else if (e.Key == (Key)Default.Control_Right)
+                Pacman.Direction = Direction.Right;
+
+            else if (e.Key == (Key)Default.Control_Up)
+                Pacman.Direction = Direction.Up;
         }
     }
 }

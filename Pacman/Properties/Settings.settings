@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Packman.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Control_Left" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">23</Value>
+    </Setting>
+    <Setting Name="Control_Down" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">26</Value>
+    </Setting>
+    <Setting Name="Control_Right" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="Control_Up" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

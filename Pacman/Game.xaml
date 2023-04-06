@@ -7,11 +7,12 @@
         xmlns:Figures="clr-namespace:Pacman.Figures"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Pacman" Height="864" Width="658" ResizeMode="NoResize">
+        Title="Pacman" Height="864" Width="658" ResizeMode="NoResize"
+        KeyUp="Window_KeyUp">
     <Grid>
         <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
         <Canvas x:Name="Canvas" Panel.ZIndex="1">
-            <Figures:Pacman Canvas.Left="302" Canvas.Top="588" Direction="Down"/>
+            <Figures:Pacman x:Name="Pacman" Canvas.Left="302" Canvas.Top="588" Direction="Down"/>
         </Canvas>
     </Grid>
 </Window>
