@@ -37,7 +37,7 @@ namespace Pacman
         public static bool IsInField(int X, int Y, int Height, int Widht)
         {
             // Map all values to map size
-            decimal MapFactor = (decimal)Textures.Map.Width / 658;
+            decimal MapFactor = (decimal)Textures.Map.Height / 746;
             decimal MapedX = X * MapFactor;
             decimal MapedY = Y * MapFactor;
             decimal MapedWidht = Widht * MapFactor;
