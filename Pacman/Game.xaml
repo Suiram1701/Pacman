@@ -1,14 +1,18 @@
-﻿<Window x:Class="Packman.Game"
+﻿<Window x:Class="Pacman.Game"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Packman"
+        xmlns:local="clr-namespace:Pacman"
+        xmlns:Figures="clr-namespace:Pacman.Figures"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Pacman" Height="864" Width="658" ResizeMode="NoResize">
-    <Grid>
-        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0"/>
-        <Canvas x:Name="Canvas" Panel.ZIndex="1"/>
-    </Grid>
+        Title="Pacman" Height="885" Width="690" ResizeMode="NoResize"
+        KeyUp="Window_KeyUp">
+    <Canvas>
+        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0" Height="746" Width="674" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="-0.1"/>
+        <Canvas x:Name="Canvas" Panel.ZIndex="1" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Figures:Pacman x:Name="Pacman" Canvas.Left="318" Canvas.Top="545" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+        </Canvas>
+    </Canvas>
 </Window>

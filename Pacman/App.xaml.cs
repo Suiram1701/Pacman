@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Packman
+namespace Pacman
 {
     /// <summary>
     /// Interaktionslogik für "App.xaml"
