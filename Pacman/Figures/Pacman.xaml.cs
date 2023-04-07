@@ -32,11 +32,21 @@ namespace Pacman.Figures
             get => (Direction)GetValue(DirectionProperty);
             set
             {
+                int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -20 : value == Direction.Right ? +20 : 0);     // X Position to check direction
+                int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -20 : value == Direction.Down ? +20 : 0);     // Y Position to check direction
+
                 // Check if direction go not in a wall
-                if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this), (int)Height, (int)Width))
+                if (!IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
+                {
+                    PreviewDirection = value;
                     return;
+                }
 
                 SetValue(DirectionProperty, value);
+
+                // Reset tolerance
+                ToleranceRounds = 0;
+                PreviewDirection = Direction.None;
 
                 // Change texture direction
                 if (value != 0)
@@ -59,6 +69,17 @@ namespace Pacman.Figures
                 }
             }
         }
+
+        /// <summary>
+        /// Rounds for direction change tolerance (help for player)
+        /// </summary>
+        private const int MaxToleranceRounds = 5;
+
+        /// <summary>
+        /// Clicked direction for tolerance
+        /// </summary>
+        private Direction PreviewDirection = Direction.None;
+        private int ToleranceRounds = 0;
 
         public Timer Timer { get; } = new Timer(50);
 
@@ -99,6 +120,26 @@ namespace Pacman.Figures
         private void MoveFigure(object sender, ElapsedEventArgs e) =>
             Dispatcher.Invoke(() =>
             {
+                // Direction chage tolerance
+                if (PreviewDirection != Direction.None)
+                {
+                    int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -20 : PreviewDirection == Direction.Right ? +20 : 0);     // X Position to check tolerance direction
+                    int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20 : PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
+
+                    // Check if tolerance is valid
+                    if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
+                        Direction = PreviewDirection;
+                    else
+                        ToleranceRounds++;
+
+                    // If tolerance is over limit reset tolerance
+                    if (ToleranceRounds > MaxToleranceRounds)
+                    {
+                        ToleranceRounds = 0;
+                        PreviewDirection = Direction.None;
+                    }
+                }
+
                 switch (Direction)     // Check if figure dont hit a wall and move
                 {
                     case Direction.Left:
