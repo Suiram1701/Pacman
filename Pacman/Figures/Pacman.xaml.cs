@@ -103,25 +103,32 @@ namespace Pacman.Figures
                 {
                     case Direction.Left:
                         if (!IsInField((int)Canvas.GetLeft(this) - 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
-                            return;
+                            goto Stop;
                         Canvas.SetLeft(this, Canvas.GetLeft(this) - 10);
                         break;
                     case Direction.Down:
                         if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width))
-                            return;
+                            goto Stop;
                         Canvas.SetTop(this, Canvas.GetTop(this) + 10);
                         break;
                     case Direction.Right:
                         if (!IsInField((int)Canvas.GetLeft(this) + 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
-                            return;
+                            goto Stop;
                         Canvas.SetLeft(this, Canvas.GetLeft(this) + 10);
                         break;
                     case Direction.Up:
                         if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width))
-                            return;
+                            goto Stop;
                         Canvas.SetTop(this, Canvas.GetTop(this) - 10);
                         break;
                 }
+                Story.Resume();
+                return;
+           
+            Stop:     // Pacman stop
+                Story.Pause();
+                Texture.Source = TextureHelper[(int)Direction, 0];
+
             }, DispatcherPriority.Render);
 
         public bool IsAnimated { get; set; }
@@ -137,7 +144,7 @@ namespace Pacman.Figures
         {
             if (!IsAnimated)
             {
-                Story.Begin();
+                Story.Resume();
                 Timer.Start();
             }
 
@@ -148,7 +155,7 @@ namespace Pacman.Figures
         {
             if (IsAnimated)
             {
-                Story.Stop();
+                Story.Pause();
                 Timer.Stop();
             }
 
