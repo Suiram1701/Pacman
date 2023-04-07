@@ -140,6 +140,13 @@ namespace Pacman.Figures
                     }
                 }
 
+                // Teleport
+                if (Canvas.GetLeft(this) > 608)
+                    Canvas.SetLeft(this, 8);
+
+                else if (Canvas.GetLeft(this) < 8)
+                    Canvas.SetLeft(this, 608);
+
                 switch (Direction)     // Check if figure dont hit a wall and move
                 {
                     case Direction.Left:
