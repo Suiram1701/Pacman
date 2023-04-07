@@ -12,9 +12,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using static Packman.Properties.Settings;
+using static Pacman.Properties.Settings;
 using Pacman.Figures;
-using Packman.Style.Textures;
+using Pacman.Style.Textures;
 using System.IO;
 
 namespace Pacman
