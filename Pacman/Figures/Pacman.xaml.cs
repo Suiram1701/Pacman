@@ -140,7 +140,7 @@ namespace Pacman.Figures
                     }
                 }
 
-                // Teleport
+                // Teleport between the two sides
                 if (Canvas.GetLeft(this) > 608)
                     Canvas.SetLeft(this, 8);
 
