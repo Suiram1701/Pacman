@@ -6,35 +6,34 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using Pacman.Collectable;
 using System.Windows.Data;
 using System.Windows.Documents;
+using Control = System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using static Pacman.Properties.Settings;
 using Pacman.Figures;
 using Pacman.Style.Textures;
 using System.IO;
+using Point = System.Drawing.Point;
+using System.Windows;
 
 namespace Pacman
 {
     /// <summary>
     /// Interaktionslogik für Game.xaml
     /// </summary>
-    public partial class Game : Window
+    public partial class Game : Control.Window
     {
         public Game()
         {
             InitializeComponent();
-        }
-        
-        /// <summary>
-        /// Summon all points new on map
-        /// </summary>
-        private void ResetPoints()
-        {
 
+            // Init map
+            ResetFigures();
+            ResetPoints();
         }
 
         /// <summary>
@@ -46,7 +45,96 @@ namespace Pacman
             Pacman.Direction = Direction.None;
             Canvas.SetLeft(Pacman, 318);
             Canvas.SetTop(Pacman, 545);
+            Panel.SetZIndex(Pacman, 2);
         }
+
+        /// <summary>
+        /// Summon all points new on map
+        /// </summary>
+        private void ResetPoints()
+        {
+            // Energizer
+            foreach (Point point in Energizer)
+            {
+                int Index = Canvas.Children.Add(new Energizer());
+                Canvas.SetLeft(Canvas.Children[Index], point.X);
+                Canvas.SetTop(Canvas.Children[Index], point.Y);
+                Panel.SetZIndex(Canvas.Children[Index], 1);
+            }
+
+            // Normal points
+            Point Point = new Point(30, 26);
+            int Distance = 24;
+            foreach (int[] Row in PointSpawning)
+            {
+                foreach (int Colomn in Row)
+                {
+                    if (Colomn > 0)
+                    {
+                        for (int i = 0; i < Colomn; i++)
+                        {
+                            int Index = Canvas.Children.Add(new Collectable.Point());
+                            Canvas.SetLeft(Canvas.Children[Index], Point.X);
+                            Canvas.SetTop(Canvas.Children[Index], Point.Y);
+                            Panel.SetZIndex(Canvas.Children[Index], 1);
+
+                            Point.X += Distance;
+                        }
+                    }
+                    else
+                        Point.X += Math.Abs(Colomn) * Distance;
+                }
+                Point.X = 30;
+                Point.Y += Distance;
+            }
+        }
+
+        /// <summary>
+        /// Position of all energizers
+        /// </summary>
+        private static readonly IEnumerable<Point> Energizer = new List<Point>()
+        {
+            new Point(30, 74),
+            new Point(630, 74),
+            new Point(30, 553),
+            new Point(630, 553)
+        };
+
+        /// <summary>
+        /// Position of all single points
+        /// </summary>
+        private static readonly int[][] PointSpawning = new int[29][]
+        {
+            new int[] {12, -2, 12},
+            new int[] {1, -4, 1, -5, 1, -2, 1, -5, 1, -4, 1},
+            new int[] {-5, 1, -5, 1, -2, 1, -5, 1, -5},
+            new int[] {1, -4, 1, -5, 1, -2, 1, -5, 1, -4, 1},
+            new int[] {26},
+            new int[] {1, -4, 1, -2, 1, -8, 1, -2, 1, -4, 1},
+            new int[] {1, -4, 1, -2, 1, -8, 1, -2, 1, -4, 1},
+            new int[] {6, -2, 4, -2, 4, -2, 6},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {-5, 1, -14, 1, -5},
+            new int[] {12, -2, 12},
+            new int[] {1, -4, 1, -5, 1, -2, 1, -5, 1, -4, 1},
+            new int[] {1, -4, 1, -5, 1, -2, 1, -5, 1, -4, 1},
+            new int[] {-1, 2, -2, 7, -2, 7, -2, 2, -1},
+            new int[] {-2, 1, -2, 1, -2, 1, -8, 1, -2, 1, -2, 1, -2},
+            new int[] {-2, 1, -2, 1, -2, 1, -8, 1, -2, 1, -2, 1, -2},
+            new int[] {6, -2, 4, -2, 4, -2, 1, 6},
+            new int[] {1, -10, 1, -2, 1, -10, 1},
+            new int[] {1, -10, 1, -2, 1, -10, 1},
+            new int[] {26}
+        };
 
         /// <summary>
         /// Calculate if the element is in Field
