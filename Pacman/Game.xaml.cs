@@ -34,7 +34,7 @@ namespace Pacman
         /// </summary>
         /// <param name="Figure">Element to check</param>
         /// <returns>True if is in field and false when not</returns>
-        public static bool IsInField(int X, int Y, int Height, int Widht)
+        public static bool IsInField(int X, int Y, int Height, int Widht, bool HouseBorder = true)
         {
             // Map all values to map size
             decimal MapFactor = (decimal)Textures.Map.Height / 746;
@@ -45,6 +45,7 @@ namespace Pacman
 
             Rectangle Rect = new Rectangle((int)MapedX, (int)MapedY, (int)MapedWidht, (int)MapedHeight);
             Color Border = Color.FromArgb(33, 33, 222);     // Map border color
+            Color ExtraBorderC = HouseBorder ? Color.FromArgb(255, 184, 222) : Color.Transparent;     // Color of ghosts house door 
 
             using (Bitmap Bmp = Textures.Map.Clone(Rect, Textures.Map.PixelFormat))
             {
@@ -52,7 +53,7 @@ namespace Pacman
                 {
                     for (int x = 0; x < Bmp.Width; x++)
                     {
-                        if (Bmp.GetPixel(x, y) == Border)
+                        if (Bmp.GetPixel(x, y) == Border || Bmp.GetPixel(x, y) == ExtraBorderC)
                         {
                             Bmp.Dispose();
                             return false;
