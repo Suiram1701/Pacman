@@ -12,7 +12,6 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Suiram1701")]
 [assembly: AssemblyProduct("Packman")]
-[assembly: AssemblyCopyright("Copyright © Suiram1701 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
