@@ -21,7 +21,7 @@ namespace Pacman.Figures
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
-        private static TextureHelper TextureHelper { get; } = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
+        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
 
         /// <summary>
         /// The current direction of pacman
