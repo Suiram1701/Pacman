@@ -39,7 +39,7 @@ namespace Pacman.Style.Textures {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Packman.Style.Textures.Textures", typeof(Textures).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Pacman.Style.Textures.Textures", typeof(Textures).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -76,6 +76,16 @@ namespace Pacman.Style.Textures {
         internal static System.Drawing.Bitmap Pacman {
             get {
                 object obj = ResourceManager.GetObject("Pacman", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Points {
+            get {
+                object obj = ResourceManager.GetObject("Points", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

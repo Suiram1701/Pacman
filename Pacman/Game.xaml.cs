@@ -28,6 +28,14 @@ namespace Pacman
         {
             InitializeComponent();
         }
+        
+        /// <summary>
+        /// Summon all points new on map
+        /// </summary>
+        private void SummonPoints()
+        {
+
+        }
 
         /// <summary>
         /// Calculate if the element is in Field
