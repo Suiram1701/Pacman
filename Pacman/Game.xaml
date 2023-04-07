@@ -3,16 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         xmlns:local="clr-namespace:Pacman"
         xmlns:Figures="clr-namespace:Pacman.Figures"
         xmlns:Collectable="clr-namespace:Pacman.Collectable"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Pacman" Height="885" Width="690" ResizeMode="NoResize"
-        KeyUp="Window_KeyUp">
+        KeyUp="Window_KeyUp" Background="Black">
     <Canvas>
-        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0" Height="746" Width="674" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="-0.1"/>
-        <Canvas x:Name="Canvas" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Label Content="Points: " Foreground="White" Canvas.Left="80" Canvas.Top="15" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="{Binding Points, Mode=OneWay}" Canvas.Left="154" Canvas.Top="14" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Height="38" Width="86" Foreground="White"/>
+
+        <Label Content="Highscore: " Foreground="White" Canvas.Left="320" Canvas.Top="14" FontSize="20"/>
+        <Label Content="{Binding Hightscore, Mode=OneWay}" Canvas.Left="430" Canvas.Top="14" FontSize="20" HorizontalAlignment="Left" Height="38" VerticalAlignment="Center" Width="129" Foreground="White"/>
+
+        <!-- Gametable -->
+        <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="-0.1" Canvas.Top="65"/>
+        <Canvas x:Name="Canvas" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Top="65">
             <Figures:Pacman x:Name="Pacman" Panel.ZIndex="2" Canvas.Left="318" Canvas.Top="545"/>
         </Canvas>
     </Canvas>

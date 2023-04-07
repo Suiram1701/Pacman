@@ -19,14 +19,23 @@ using Pacman.Style.Textures;
 using System.IO;
 using Point = System.Drawing.Point;
 using System.Windows;
+using System.Timers;
+using System.Windows.Threading;
 
 namespace Pacman
 {
     /// <summary>
     /// Interaktionslogik für Game.xaml
     /// </summary>
-    public partial class Game : Control.Window
+    public partial class Game : Window
     {
+        #region Datacontext
+        public int Points { get; set; }
+        public int Hightscore { get; set; }
+        #endregion
+
+        private readonly Timer GameLoop = new Timer(50);
+
         public Game()
         {
             InitializeComponent();
@@ -34,6 +43,10 @@ namespace Pacman
             // Init map
             ResetFigures();
             ResetPoints();
+
+            // Setup game loop
+            GameLoop.Elapsed += PointCheck;
+            GameLoop.Start();
         }
 
         /// <summary>
@@ -73,6 +86,7 @@ namespace Pacman
                     {
                         for (int i = 0; i < Colomn; i++)
                         {
+                            // Create and positioning point
                             int Index = Canvas.Children.Add(new Collectable.Point());
                             Canvas.SetLeft(Canvas.Children[Index], Point.X);
                             Canvas.SetTop(Canvas.Children[Index], Point.Y);
@@ -88,6 +102,26 @@ namespace Pacman
                 Point.Y += Distance;
             }
         }
+
+        /// <summary>
+        /// Check if pacman can eat a point
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PointCheck(object sender, ElapsedEventArgs e) =>
+            Dispatcher.Invoke(() =>
+            {
+                // Check distance and get near item
+                ICollectable Item = Canvas.Children.OfType<ICollectable>()
+                    .FirstOrDefault(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - Canvas.GetLeft(Pacman)) <= 10 &&
+                    Math.Abs(Canvas.GetTop((UIElement)Object) - Canvas.GetTop(Pacman)) <= 10);
+                if (Item != null)
+                {
+                    // Add points and remove item
+                    Points += (int)Item.Point;
+                    Canvas.Children.Remove((UIElement)Item);
+                }
+            }, DispatcherPriority.Loaded);
 
         /// <summary>
         /// Position of all energizers
@@ -130,7 +164,7 @@ namespace Pacman
             new int[] {-1, 2, -2, 7, -2, 7, -2, 2, -1},
             new int[] {-2, 1, -2, 1, -2, 1, -8, 1, -2, 1, -2, 1, -2},
             new int[] {-2, 1, -2, 1, -2, 1, -8, 1, -2, 1, -2, 1, -2},
-            new int[] {6, -2, 4, -2, 4, -2, 1, 6},
+            new int[] {6, -2, 4, -2, 4, -2, 6},
             new int[] {1, -10, 1, -2, 1, -10, 1},
             new int[] {1, -10, 1, -2, 1, -10, 1},
             new int[] {26}
