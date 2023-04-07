@@ -141,10 +141,10 @@ namespace Pacman.Figures
                 }
 
                 // Teleport between the two sides
-                if (Canvas.GetLeft(this) > 608)
+                if (Canvas.GetLeft(this) > 608 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
                     Canvas.SetLeft(this, 8);
 
-                else if (Canvas.GetLeft(this) < 8)
+                else if (Canvas.GetLeft(this) < 8 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
                     Canvas.SetLeft(this, 608);
 
                 switch (Direction)     // Check if figure dont hit a wall and move
