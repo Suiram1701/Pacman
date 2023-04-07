@@ -1,5 +1,4 @@
-﻿using Packman.Style.Textures;
-using Pacman.Style;
+﻿using Pacman.Style;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Windows.Media.Animation;
 using System.Timers;
 using System.Windows.Threading;
 using static Pacman.Game;
+using Pacman.Style.Textures;
 
 namespace Pacman.Figures
 {
