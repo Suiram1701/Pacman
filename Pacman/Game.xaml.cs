@@ -32,9 +32,20 @@ namespace Pacman
         /// <summary>
         /// Summon all points new on map
         /// </summary>
-        private void SummonPoints()
+        private void ResetPoints()
         {
 
+        }
+
+        /// <summary>
+        /// Set all figures on their start positions
+        /// </summary>
+        private void ResetFigures()
+        {
+            // Pacman
+            Pacman.Direction = Direction.None;
+            Canvas.SetLeft(Pacman, 318);
+            Canvas.SetTop(Pacman, 545);
         }
 
         /// <summary>
