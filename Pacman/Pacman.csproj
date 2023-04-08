@@ -64,6 +64,9 @@
     <Compile Include="Collectable\Energizer.xaml.cs">
       <DependentUpon>Energizer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Collectable\Fruit.xaml.cs">
+      <DependentUpon>Fruit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Collectable\ICollectable.cs" />
     <Compile Include="Extension\Image.cs" />
     <Compile Include="Figures\IFigure.cs" />
@@ -109,6 +112,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Collectable\Fruit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Game.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Style\Textures\Points.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Style\Textures\Fruits.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
