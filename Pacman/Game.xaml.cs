@@ -21,6 +21,7 @@ using Point = System.Drawing.Point;
 using System.Windows;
 using System.Timers;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace Pacman
 {
@@ -30,8 +31,15 @@ namespace Pacman
     public partial class Game : Window
     {
         #region Datacontext
-        public int Points { get; set; }
-        public int Hightscore { get; set; }
+        public int Points
+        {
+            get => int.Parse(CPoints.Content.ToString());
+            set
+            {
+                CPoints.Content = value;
+            }
+        }
+        public int Hightscore { get; set; } = 0;
         #endregion
 
         private readonly Timer GameLoop = new Timer(50);
