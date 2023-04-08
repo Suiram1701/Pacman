@@ -78,6 +78,7 @@
     <Compile Include="Collectable\Point.xaml.cs">
       <DependentUpon>Point.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsHelper.cs" />
     <Compile Include="Style\TextureHelper.cs" />
     <Compile Include="Style\Textures\Textures.Designer.cs">
       <AutoGen>True</AutoGen>

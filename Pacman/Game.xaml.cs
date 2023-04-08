@@ -22,6 +22,7 @@ using System.Windows;
 using System.Timers;
 using System.Windows.Threading;
 using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace Pacman
 {
@@ -37,9 +38,34 @@ namespace Pacman
             set
             {
                 CPoints.Content = value;
+
+                // If you have more points than the highscore override it
+                if (Points > Hightscore)
+                    Hightscore = Points;
             }
         }
-        public int Hightscore { get; set; } = 0;
+
+        public int Hightscore
+        {
+            get => int.Parse(CHightscore.Content.ToString());
+            set
+            {
+                CHightscore.Content = value;
+
+                // Save highscore
+                Default.Highscore = value;
+                using (SHA256 SHA = SHA256.Create())
+                    Default.Highscore_sha = Convert.ToBase64String(SHA.ComputeHash(Encoding.UTF8.GetBytes(value.ToString())));
+
+                Default.Save();
+            }
+        }
+
+        public int Level
+        {
+            get => int.Parse(CLevel.Content.ToString());
+            set => CLevel.Content = value;
+        }
         #endregion
 
         private readonly Timer GameLoop = new Timer(50);
@@ -47,6 +73,16 @@ namespace Pacman
         public Game()
         {
             InitializeComponent();
+
+            // Load highscore and check if it is valid
+            string sha;
+            using (SHA256 SHA = SHA256.Create())
+                sha = Convert.ToBase64String(SHA.ComputeHash(Encoding.UTF8.GetBytes(Default.Highscore.ToString())));
+
+            if (sha == Default.Highscore_sha)
+                CHightscore.Content = Default.Highscore.ToString();
+            else
+                Hightscore = 0;
 
             // Init map
             ResetFigures();

@@ -23,39 +23,75 @@ namespace Pacman.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("23")]
         public int Control_Left {
             get {
                 return ((int)(this["Control_Left"]));
             }
+            set {
+                this["Control_Left"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("26")]
         public int Control_Down {
             get {
                 return ((int)(this["Control_Down"]));
             }
+            set {
+                this["Control_Down"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int Control_Right {
             get {
                 return ((int)(this["Control_Right"]));
             }
+            set {
+                this["Control_Right"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("24")]
         public int Control_Up {
             get {
                 return ((int)(this["Control_Up"]));
+            }
+            set {
+                this["Control_Up"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long Highscore {
+            get {
+                return ((long)(this["Highscore"]));
+            }
+            set {
+                this["Highscore"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Highscore_sha {
+            get {
+                return ((string)(this["Highscore_sha"]));
+            }
+            set {
+                this["Highscore_sha"] = value;
             }
         }
     }
