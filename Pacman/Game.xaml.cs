@@ -112,12 +112,14 @@ namespace Pacman
             Dispatcher.Invoke(() =>
             {
                 // Check distance and get near item
-                ICollectable Item = Canvas.Children.OfType<ICollectable>()
-                    .FirstOrDefault(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - Canvas.GetLeft(Pacman)) <= 10 &&
-                    Math.Abs(Canvas.GetTop((UIElement)Object) - Canvas.GetTop(Pacman)) <= 10);
-                if (Item != null)
+                IEnumerable<ICollectable> Items = Canvas.Children.OfType<ICollectable>()
+                    .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - (Canvas.GetLeft(Pacman)) - 10) <= 20 &&
+                    Math.Abs(Canvas.GetTop((UIElement)Object) - (Canvas.GetTop(Pacman)) - 10) <= 20)
+                    .ToList();
+
+                // Add points and remove item
+                foreach (ICollectable Item in Items)
                 {
-                    // Add points and remove item
                     Points += (int)Item.Point;
                     Canvas.Children.Remove((UIElement)Item);
                 }

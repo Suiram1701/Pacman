@@ -21,7 +21,7 @@
         <!-- Gametable -->
         <Image Source="/Style/Textures/Map.png" Panel.ZIndex="0" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="-0.1" Canvas.Top="65"/>
         <Canvas x:Name="Canvas" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Top="65">
-            <Figures:Pacman x:Name="Pacman" Panel.ZIndex="2" Canvas.Left="318" Canvas.Top="545"/>
+            <Figures:Pacman x:Name="Pacman" Panel.ZIndex="2" Canvas.Left="317" Canvas.Top="545" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Canvas>
     </Canvas>
 </Window>

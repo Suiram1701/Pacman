@@ -8,6 +8,6 @@
         Title="Main menu" Height="400" Width="480" ResizeMode="NoResize">
     <Canvas>
         <Label Content="Pacman" Style="{StaticResource Text}" Canvas.Left="126" Canvas.Top="44" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" Width="228"/>
-        <Button Click="Start_Click" Content="Start Game" Height="60" Width="240" Canvas.Left="120" Canvas.Top="194" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30"/>
+        <Button Click="Start_Click" Content="Play" Height="60" Width="240" Canvas.Left="120" Canvas.Top="194" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30"/>
     </Canvas>
 </Window>
