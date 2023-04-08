@@ -32,6 +32,9 @@ namespace Pacman
     public partial class Game : Window
     {
         #region Datacontext
+        /// <summary>
+        /// Players current score
+        /// </summary>
         public int Points
         {
             get => int.Parse(CPoints.Content.ToString());
@@ -45,6 +48,9 @@ namespace Pacman
             }
         }
 
+        /// <summary>
+        /// Highscore on this windows account
+        /// </summary>
         public int Hightscore
         {
             get => int.Parse(CHightscore.Content.ToString());
@@ -61,6 +67,9 @@ namespace Pacman
             }
         }
 
+        /// <summary>
+        /// Current playing level
+        /// </summary>
         public int Level
         {
             get => int.Parse(CLevel.Content.ToString());
@@ -68,6 +77,9 @@ namespace Pacman
         }
         #endregion
 
+        /// <summary>
+        /// Timer for some mechanics
+        /// </summary>
         private readonly Timer GameLoop = new Timer(50);
 
         public Game()
@@ -178,7 +190,6 @@ namespace Pacman
             }
         }
             
-
         /// <summary>
         /// Position of all energizers
         /// </summary>
