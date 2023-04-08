@@ -116,22 +116,32 @@ namespace Pacman
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PointCheck(object sender, ElapsedEventArgs e) =>
-            Dispatcher.Invoke(() =>
+        private void PointCheck(object sender, ElapsedEventArgs e)
+        {
+            try
             {
-                // Check distance and get near item
-                IEnumerable<ICollectable> Items = Canvas.Children.OfType<ICollectable>()
-                    .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - (Canvas.GetLeft(Pacman)) - 10) <= 20 &&
-                    Math.Abs(Canvas.GetTop((UIElement)Object) - (Canvas.GetTop(Pacman)) - 10) <= 20)
-                    .ToList();
-
-                // Add points and remove item
-                foreach (ICollectable Item in Items)
+                Dispatcher.Invoke(() =>
                 {
-                    Points += (int)Item.Point;
-                    Canvas.Children.Remove((UIElement)Item);
-                }
-            }, DispatcherPriority.Loaded);
+                    // Check distance and get near item
+                    IEnumerable<ICollectable> Items = Canvas.Children.OfType<ICollectable>()
+                        .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - (Canvas.GetLeft(Pacman)) - 10) <= 20 &&
+                        Math.Abs(Canvas.GetTop((UIElement)Object) - (Canvas.GetTop(Pacman)) - 10) <= 20)
+                        .ToList();
+
+                    // Add points and remove item
+                    foreach (ICollectable Item in Items)
+                    {
+                        Points += (int)Item.Point;
+                        Canvas.Children.Remove((UIElement)Item);
+                    }
+                }, DispatcherPriority.Loaded);
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+        }
+            
 
         /// <summary>
         /// Position of all energizers

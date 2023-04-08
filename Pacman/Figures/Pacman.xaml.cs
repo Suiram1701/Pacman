@@ -10,6 +10,9 @@ using System.Timers;
 using System.Windows.Threading;
 using static Pacman.Game;
 using Pacman.Style.Textures;
+using System.Threading;
+using Timer = System.Timers.Timer;
+using System.Threading.Tasks;
 
 namespace Pacman.Figures
 {
@@ -117,67 +120,76 @@ namespace Pacman.Figures
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MoveFigure(object sender, ElapsedEventArgs e) =>
-            Dispatcher.Invoke(() =>
+        private void MoveFigure(object sender, ElapsedEventArgs e)
+        {
+            try
             {
-                // Direction chage tolerance
-                if (PreviewDirection != Direction.None)
+                Dispatcher.Invoke(() =>
                 {
-                    int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -14 : PreviewDirection == Direction.Right ? +14 : 0);     // X Position to check tolerance direction
-                    int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -14 : PreviewDirection == Direction.Down ? +14 : 0);     // Y Position to check tolerance direction
-
-                    // Check if tolerance is valid
-                    if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
-                        Direction = PreviewDirection;
-                    else
-                        ToleranceRounds++;
-
-                    // If tolerance is over limit reset tolerance
-                    if (ToleranceRounds > MaxToleranceRounds)
+                    // Direction chage tolerance
+                    if (PreviewDirection != Direction.None)
                     {
-                        ToleranceRounds = 0;
-                        PreviewDirection = Direction.None;
+                        int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -14 : PreviewDirection == Direction.Right ? +14 : 0);     // X Position to check tolerance direction
+                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -14 : PreviewDirection == Direction.Down ? +14 : 0);     // Y Position to check tolerance direction
+
+                        // Check if tolerance is valid
+                        if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
+                            Direction = PreviewDirection;
+                        else
+                            ToleranceRounds++;
+
+                        // If tolerance is over limit reset tolerance
+                        if (ToleranceRounds > MaxToleranceRounds)
+                        {
+                            ToleranceRounds = 0;
+                            PreviewDirection = Direction.None;
+                        }
                     }
-                }
 
-                // Teleport between the two sides
-                if (Canvas.GetLeft(this) > 608 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
-                    Canvas.SetLeft(this, 8);
+                    // Teleport between the two sides
+                    if (Canvas.GetLeft(this) > 608 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
+                        Canvas.SetLeft(this, 8);
 
-                else if (Canvas.GetLeft(this) < 8 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
-                    Canvas.SetLeft(this, 608);
+                    else if (Canvas.GetLeft(this) < 8 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
+                        Canvas.SetLeft(this, 608);
 
-                switch (Direction)     // Check if figure dont hit a wall and move
-                {
-                    case Direction.Left:
-                        if (!IsInField((int)Canvas.GetLeft(this) - 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
-                            goto Stop;
-                        Canvas.SetLeft(this, Canvas.GetLeft(this) - 10);
-                        break;
-                    case Direction.Down:
-                        if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width))
-                            goto Stop;
-                        Canvas.SetTop(this, Canvas.GetTop(this) + 10);
-                        break;
-                    case Direction.Right:
-                        if (!IsInField((int)Canvas.GetLeft(this) + 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
-                            goto Stop;
-                        Canvas.SetLeft(this, Canvas.GetLeft(this) + 10);
-                        break;
-                    case Direction.Up:
-                        if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width))
-                            goto Stop;
-                        Canvas.SetTop(this, Canvas.GetTop(this) - 10);
-                        break;
-                }
-                Story.Resume();
-                return;
-           
-            Stop:     // Pacman stop
-                Story.Pause();
-                Texture.Source = TextureHelper[(int)Direction, 0];
+                    switch (Direction)     // Check if figure dont hit a wall and move
+                    {
+                        case Direction.Left:
+                            if (!IsInField((int)Canvas.GetLeft(this) - 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
+                                goto Stop;
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 10);
+                            break;
+                        case Direction.Down:
+                            if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width))
+                                goto Stop;
+                            Canvas.SetTop(this, Canvas.GetTop(this) + 10);
+                            break;
+                        case Direction.Right:
+                            if (!IsInField((int)Canvas.GetLeft(this) + 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
+                                goto Stop;
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 10);
+                            break;
+                        case Direction.Up:
+                            if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width))
+                                goto Stop;
+                            Canvas.SetTop(this, Canvas.GetTop(this) - 10);
+                            break;
+                    }
+                    Story.Resume();
+                    return;
 
-            }, DispatcherPriority.Render);
+                Stop:     // Pacman stop
+                    Story.Pause();
+                    Texture.Source = TextureHelper[(int)Direction, 0];
+
+                }, DispatcherPriority.Render);
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+        }
 
         public bool IsAnimated { get; set; }
 
