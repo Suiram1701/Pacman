@@ -44,6 +44,7 @@ namespace Pacman
             get => int.Parse(CPoints.Content.ToString());
             set
             {
+                LevelPoints += value - Points;
                 CPoints.Content = value;
 
                 // If you have more points than the highscore override it
@@ -77,9 +78,19 @@ namespace Pacman
         public int Level
         {
             get => int.Parse(CLevel.Content.ToString());
-            set => CLevel.Content = value;
+            set
+            {
+                CLevel.Content = value;
+                LevelPoints = 0;
+                FruitSpawned = false;
+            }
         }
         #endregion
+
+        /// <summary>
+        /// Points in the current level
+        /// </summary>
+        private int LevelPoints { get; set; } = 0;
 
         /// <summary>
         /// Timer for some mechanics
@@ -161,6 +172,10 @@ namespace Pacman
         /// </summary>
         private void ResetPoints()
         {
+            // Reset
+            foreach (ICollectable Item in Canvas.Children.OfType<ICollectable>().ToList())
+                Canvas.Children.Remove((UIElement)Item);
+
             // Energizer
             foreach (Point point in Energizer)
             {
@@ -201,7 +216,7 @@ namespace Pacman
         /// Spawn a fruit on random point in map
         /// </summary>
         /// <param name="Type">Fruit to spawn</param>
-        private void SpwanFruit(Fruit.Fruits Type)
+        private void SpawnFruit(Fruit.Fruits Type)
         {
             Spawn:
             // Random Position
@@ -293,8 +308,17 @@ namespace Pacman
             {
                 Dispatcher.Invoke(() =>
                 {
+                    // If more than half points was eaten spawn the fruit
+                    Random Rnd = new Random();
+                    if (LevelPoints >= 1320 && !FruitSpawned)
+                    {
+                        SpawnFruit(Level -1  <= 7 ? (Fruit.Fruits)(Level - 1) : (Fruit.Fruits)Rnd.Next(5));
+                        FruitSpawned = true;
+                    }
+
                     // If level is done reset all
-                    if (Canvas.Children.OfType<ICollectable>().Count() == 0)
+                    if (Canvas.Children.Cast<UIElement>()
+                    .Where(Element => Element is Collectable.Point || Element is Energizer).Count() == 0)
                     {
                         Level++;
 
@@ -303,7 +327,6 @@ namespace Pacman
                             Figure.Stop();
 
                         ResetPoints();
-
 
                         Story.Begin();
                     }
@@ -314,6 +337,8 @@ namespace Pacman
 
             }
         }
+
+        private bool FruitSpawned = false;
 
         /// <summary>
         /// Distance between points
