@@ -70,7 +70,7 @@ namespace Pacman.Figures
                 int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -20 : value == Direction.Down ? +20 : 0);     // Y Position to check direction
 
                 // Check if direction go not in a wall
-                if (!IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
+                if (!IsInField(PreviewX, PreviewY, (int)Height, (int)Width, HouseBorder: false))
                 {
                     PreviewDirection = value;
                     return;
@@ -85,10 +85,12 @@ namespace Pacman.Figures
                 // Change texture direction
                 if (value != 0)
                 {
+                    int Index = (int)value - 1 >= 0 ? (int)value - 1 : 1;
+
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, (int)value - 1];
-                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, (int)value + 4 - 1];
+                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, Index];
+                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, Index + 4];
                     Story.Begin();
                 }
                 else
@@ -124,8 +126,9 @@ namespace Pacman.Figures
             Animation.Duration = TimeSpan.FromMilliseconds(150);
             Animation.RepeatBehavior = RepeatBehavior.Forever;
 
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(0)));
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(75)));
+            int DirectionIndex = (int)Direction - 1 >= 0 ? (int)Direction - 1 : 1;
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, DirectionIndex], TimeSpan.FromMilliseconds(0)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, DirectionIndex + 4], TimeSpan.FromMilliseconds(75)));
             AnimationKeyFrames = Animation.KeyFrames.Cast<ObjectKeyFrame>().ToList();
 
             // Setup animation
@@ -160,7 +163,7 @@ namespace Pacman.Figures
                         int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20 : PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
 
                         // Check if tolerance is valid
-                        if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
+                        if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width, HouseBorder: false))
                             Direction = PreviewDirection;
                         else
                             ToleranceRounds++;

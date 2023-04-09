@@ -8,6 +8,9 @@ using System.Windows.Media.Animation;
 
 namespace Pacman.Figures
 {
+    /// <summary>
+    /// Current direction of the figure
+    /// </summary>
     public enum Direction
     {
         None = 0,

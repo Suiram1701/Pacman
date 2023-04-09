@@ -95,7 +95,7 @@ namespace Pacman
         /// <summary>
         /// Timer for some mechanics
         /// </summary>
-        private readonly Timer GameLoop = new Timer(50);
+        private readonly Timer GameLoop = new Timer(30);
 
         private readonly Storyboard Story = new Storyboard();
 
@@ -155,11 +155,35 @@ namespace Pacman
         /// </summary>
         private void ResetFigures()
         {
-            // Pacman
+            // Pacman ghost
             Pacman.Direction = Direction.None;
-            Canvas.SetLeft(Pacman, 318);
-            Canvas.SetTop(Pacman, 545);
+            Canvas.SetLeft(Pacman, 317);
+            Canvas.SetTop(Pacman, 544);
             Panel.SetZIndex(Pacman, 2);
+
+            // Red ghost
+            Red.Direction = Direction.Left;
+            Canvas.SetLeft(Red, 317);
+            Canvas.SetTop(Red, 259);
+            Panel.SetZIndex(Red, 2);
+
+            // Purple ghost
+            Purple.Direction = Direction.Down;
+            Canvas.SetLeft(Purple, 317);
+            Canvas.SetTop(Purple, 330);
+            Panel.SetZIndex(Purple, 2);
+
+            // Cyan ghost
+            Cyan.Direction = Direction.Up;
+            Canvas.SetLeft(Cyan, 270);
+            Canvas.SetTop(Cyan, 330);
+            Panel.SetZIndex(Cyan, 2);
+
+            // Orange ghost
+            Orange.Direction = Direction.Up;
+            Canvas.SetLeft(Orange, 363);
+            Canvas.SetTop(Orange, 330);
+            Panel.SetZIndex(Orange, 2);
 
             // Stop figures
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())

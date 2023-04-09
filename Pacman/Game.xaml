@@ -28,7 +28,7 @@
             <Figures:Ghost x:Name="Purple" Color="Purple" Canvas.Left="317" Canvas.Top="330" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Figures:Ghost x:Name="Cyan" Color="Cyan" Canvas.Left="270" Canvas.Top="330" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <Figures:Ghost x:Name="Orange" Color="Orange" Canvas.Left="363" Canvas.Top="330" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Figures:Pacman x:Name="Pacman" Panel.ZIndex="2" Canvas.Left="317" Canvas.Top="545" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Figures:Pacman x:Name="Pacman" Canvas.Left="317" Canvas.Top="544" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Canvas>
         <Label x:Name="Counter" Content="" Foreground="Yellow" Canvas.Left="300" Canvas.Top="450" FontSize="40"/>
     </Canvas>
