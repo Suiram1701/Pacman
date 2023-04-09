@@ -1,35 +1,63 @@
-﻿using Pacman.Style;
+﻿using Pacman.Style.Textures;
+using Pacman.Style;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Timers;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 using static Pacman.Game;
-using Pacman.Style.Textures;
-using System.Threading;
-using Timer = System.Timers.Timer;
-using System.Threading.Tasks;
 
 namespace Pacman.Figures
 {
     /// <summary>
-    /// Interaktionslogik für Pacman.xaml
+    /// Interaktionslogik für Ghost.xaml
     /// </summary>
-    public partial class Pacman : UserControl, IFigure
+    public partial class Ghost : UserControl, IFigure
     {
+        /// <summary>
+        /// Color of this ghost
+        /// </summary>
+        public enum Colors
+        {
+            Red = 0,
+            Purple = 1,
+            Cyan = 2,
+            Orange = 3
+        }
+
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
-        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
+        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Ghost, 14, 14, 5, 8);
 
-        /// <summary>
-        /// The current direction of pacman
-        /// </summary>
-        public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register("Direction", typeof(Direction), typeof(Pacman), new PropertyMetadata(Direction.None));
+        public static readonly DependencyProperty ColorProperty = DependencyProperty.Register("Color", typeof(Colors), typeof(Ghost), new PropertyMetadata(Colors.Red));
+        public Colors Color
+        {
+            get => (Colors)GetValue(ColorProperty);
+            set
+            {
+                SetValue(ColorProperty, value);
+
+                // Update texture
+                AnimationKeyFrames[0].Value = TextureHelper[(int)value, (int)Direction - 1];
+                AnimationKeyFrames[1].Value = TextureHelper[(int)value, (int)Direction + 4 - 1];
+            }
+        }
+
+        public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register("Direction", typeof(Direction), typeof(Ghost), new PropertyMetadata(Direction.None));
         public Direction Direction
         {
             get => (Direction)GetValue(DirectionProperty);
@@ -59,25 +87,23 @@ namespace Pacman.Figures
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[0, 0];
-                    AnimationKeyFrames[1].Value = TextureHelper[(int)value, 0];
-                    AnimationKeyFrames[2].Value = TextureHelper[(int)value, 1];
+                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, (int)value - 1];
+                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, (int)value + 4 - 1];
                     Story.Begin();
                 }
                 else
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[0, 0];
-                    AnimationKeyFrames[1].Value = TextureHelper[0, 0];
-                    AnimationKeyFrames[2].Value = TextureHelper[0, 0];
+                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, 1];
+                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, 5];
                     Story.Begin();
                 }
             }
         }
 
         /// <summary>
-        /// Rounds for direction change tolerance (help for player)
+        /// Rounds for direction change tolerance
         /// </summary>
         private const int MaxToleranceRounds = 5;
 
@@ -89,7 +115,7 @@ namespace Pacman.Figures
 
         public Timer Timer { get; } = new Timer(50);
 
-        public Pacman()
+        public Ghost()
         {
             InitializeComponent();
 
@@ -99,8 +125,7 @@ namespace Pacman.Figures
             Animation.RepeatBehavior = RepeatBehavior.Forever;
 
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(0)));
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(50)));
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(100)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[0, 0], TimeSpan.FromMilliseconds(75)));
             AnimationKeyFrames = Animation.KeyFrames.Cast<ObjectKeyFrame>().ToList();
 
             // Setup animation
@@ -132,7 +157,7 @@ namespace Pacman.Figures
                     if (PreviewDirection != Direction.None)
                     {
                         int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -20 : PreviewDirection == Direction.Right ? +20 : 0);     // X Position to check tolerance direction
-                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20: PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
+                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20 : PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
 
                         // Check if tolerance is valid
                         if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
@@ -181,7 +206,7 @@ namespace Pacman.Figures
                     Story.Resume();
                     return;
 
-                Stop:     // Pacman stop
+                Stop:     // Figure stop
                     Story.Pause();
                     Texture.Source = TextureHelper[(int)Direction, 0];
 
