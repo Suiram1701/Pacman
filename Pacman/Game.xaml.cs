@@ -133,7 +133,6 @@ namespace Pacman
 
             // Normal points
             Point Point = new Point(30, 26);
-            int Distance = 24;
             foreach (int[] Row in PointSpawning)
             {
                 foreach (int Colomn in Row)
@@ -157,6 +156,60 @@ namespace Pacman
                 Point.X = 30;
                 Point.Y += Distance;
             }
+        }
+
+        /// <summary>
+        /// Spawn a fruit on random point in map
+        /// </summary>
+        /// <param name="Type">Fruit to spawn</param>
+        private void SpwanFruit(Fruit.Fruits Type)
+        {
+            Spawn:
+            // Random Position
+            Random Rnd = new Random();
+            int RndY = Rnd.Next(PointSpawning.Length);
+
+            // All valid X position for this row
+            List<int> ValidX = new List<int>();
+            int TempXPos = 0;
+            foreach (int Colomn in PointSpawning[RndY])
+            {
+                if (Colomn > 0)
+                    for (int i = 0; i < Colomn; i++)
+                    {
+                        ValidX.Add(TempXPos);
+                        TempXPos++;
+                    }
+                else
+                    TempXPos += Math.Abs(Colomn);
+            }
+            int RndX = ValidX[Rnd.Next(ValidX.Count)];
+
+            // Calc spawn position
+            Point SpawnPosition = new Point(20 + (RndX * Distance) , 19 + (RndY * Distance));
+
+            // Add fruit and positioning it
+            int Index = Canvas.Children.Add(new Fruit()
+            {
+                Type = Type
+            });
+            Canvas.SetLeft(Canvas.Children[Index], SpawnPosition.X);
+            Canvas.SetTop(Canvas.Children[Index], SpawnPosition.Y);
+            Panel.SetZIndex(Canvas.Children[Index], 1);
+
+            // Get all collectable near from placed fruit
+            IEnumerable<ICollectable> Items = Canvas.Children.OfType<ICollectable>()
+                .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - Canvas.GetLeft(Canvas.Children[Index]) - 20) <= 20 &&
+                Math.Abs(Canvas.GetTop((UIElement)Object) - Canvas.GetTop(Canvas.Children[Index]) - 20) <= 20 && Object != Canvas.Children[Index])
+                .ToList();
+
+            // If there is allready a fruit positioning again or if there is an energizer
+            if (Items.Any(Item => Item is Fruit || Item is Energizer))
+                goto Spawn;
+
+            // Remove points on fruits position
+            foreach (ICollectable item in Items)
+                Canvas.Children.Remove((UIElement)item);
         }
 
         /// <summary>
@@ -189,7 +242,12 @@ namespace Pacman
 
             }
         }
-            
+
+        /// <summary>
+        /// Distance between points
+        /// </summary>
+        private const int Distance = 24;
+
         /// <summary>
         /// Position of all energizers
         /// </summary>

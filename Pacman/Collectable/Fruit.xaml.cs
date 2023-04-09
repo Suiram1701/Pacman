@@ -55,16 +55,19 @@ namespace Pacman.Collectable
 
         private static readonly TextureHelper TextureHelper = new TextureHelper(Textures.Fruits, 13, 13, 1, 8);
 
-        public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(Fruits), typeof(Fruits), new PropertyMetadata(Fruits.Cherry));
+        /// <summary>
+        /// Variety of this fruit
+        /// </summary>
         public Fruits Type
         {
-            get => (Fruits)GetValue(TypeProperty);
+            get => _Type;
             set
             {
-                SetValue(TypeProperty, value);
+                _Type = value;
                 Texture.Source = TextureHelper[(int)value];
             }
         }
+        private Fruits _Type;
 
         public Points Point => FruitPoints[(int)Type];
 
