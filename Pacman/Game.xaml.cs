@@ -23,6 +23,10 @@ using System.Timers;
 using System.Windows.Threading;
 using System.ComponentModel;
 using System.Security.Cryptography;
+using System.Threading;
+using Timer = System.Timers.Timer;
+using System.Windows.Media.Animation;
+using System.Windows.Media.TextFormatting;
 
 namespace Pacman
 {
@@ -82,6 +86,8 @@ namespace Pacman
         /// </summary>
         private readonly Timer GameLoop = new Timer(50);
 
+        private readonly Storyboard Story = new Storyboard();
+
         public Game()
         {
             InitializeComponent();
@@ -96,14 +102,41 @@ namespace Pacman
             else
                 Hightscore = 0;
 
+            // Setup keyframes
+            ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("3", TimeSpan.FromSeconds(0)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("2", TimeSpan.FromSeconds(1)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("1", TimeSpan.FromSeconds(2)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("GO!", TimeSpan.FromSeconds(3)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(null, TimeSpan.FromSeconds(4)));
+
+            // Setup story
+            Story.Duration = TimeSpan.FromSeconds(4);
+            Story.Children.Add(Animation);
+            Storyboard.SetTarget(Animation, Counter);
+            Storyboard.SetTargetProperty(Animation, new PropertyPath(ContentProperty));
+            Story.Completed += Counter_Completet;
+
             // Init map
             ResetFigures();
             ResetPoints();
+            Story.Begin();
 
             // Setup game loop
             GameLoop.Elapsed += PointCheck;
             GameLoop.Elapsed += LevelCheck;
             GameLoop.Start();
+        }
+
+        /// <summary>
+        /// Start game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Counter_Completet(object sender, EventArgs e)
+        {
+            foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                Figure.Start();
         }
 
         /// <summary>
@@ -116,8 +149,13 @@ namespace Pacman
             Canvas.SetLeft(Pacman, 318);
             Canvas.SetTop(Pacman, 545);
             Panel.SetZIndex(Pacman, 2);
+
+            // Stop figures
+            foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                Figure.Stop();
         }
 
+        #region Points
         /// <summary>
         /// Summon all points new on map
         /// </summary>
@@ -265,6 +303,9 @@ namespace Pacman
                             Figure.Stop();
 
                         ResetPoints();
+
+
+                        Story.Begin();
                     }
                 }, DispatcherPriority.Loaded);
             }
@@ -325,6 +366,7 @@ namespace Pacman
             new int[] {1, -10, 1, -2, 1, -10, 1},
             new int[] {26}
         };
+        #endregion
 
         /// <summary>
         /// Calculate if the element is in Field

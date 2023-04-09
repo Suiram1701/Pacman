@@ -26,5 +26,6 @@
         <Canvas x:Name="Canvas" Height="746" Width="673.8" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Top="65">
             <Figures:Pacman x:Name="Pacman" Panel.ZIndex="2" Canvas.Left="317" Canvas.Top="545" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Canvas>
+        <Label x:Name="Counter" Content="" Foreground="Yellow" Canvas.Left="300" Canvas.Top="450" FontSize="40"/>
     </Canvas>
 </Window>
