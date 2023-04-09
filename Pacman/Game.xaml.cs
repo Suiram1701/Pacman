@@ -329,6 +329,11 @@ namespace Pacman
             }
             return true;
         }
+            catch
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Ckeck if move direction of pacman change

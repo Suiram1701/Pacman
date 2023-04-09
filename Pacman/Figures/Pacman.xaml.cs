@@ -35,8 +35,8 @@ namespace Pacman.Figures
             get => (Direction)GetValue(DirectionProperty);
             set
             {
-                int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -14 : value == Direction.Right ? +14 : 0);     // X Position to check direction
-                int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -14 : value == Direction.Down ? +14 : 0);     // Y Position to check direction
+                int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -20 : value == Direction.Right ? +20 : 0);     // X Position to check direction
+                int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -20 : value == Direction.Down ? +20 : 0);     // Y Position to check direction
 
                 // Check if direction go not in a wall
                 if (!IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
@@ -129,8 +129,8 @@ namespace Pacman.Figures
                     // Direction chage tolerance
                     if (PreviewDirection != Direction.None)
                     {
-                        int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -14 : PreviewDirection == Direction.Right ? +14 : 0);     // X Position to check tolerance direction
-                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -14 : PreviewDirection == Direction.Down ? +14 : 0);     // Y Position to check tolerance direction
+                        int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -20 : PreviewDirection == Direction.Right ? +20 : 0);     // X Position to check tolerance direction
+                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20: PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
 
                         // Check if tolerance is valid
                         if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))
