@@ -9,7 +9,7 @@
         xmlns:Collectable="clr-namespace:Pacman.Collectable"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Pacman" Height="885" Width="690" ResizeMode="NoResize"
+        Title="Pacman" Height="885" Width="690" ResizeMode="NoResize" Icon="/Style/Icon/Icon32px.ico"
         KeyUp="Window_KeyUp" Background="Black">
     <Canvas>
         <Label Content="Score: " Foreground="White" Canvas.Left="80" Canvas.Top="15" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>

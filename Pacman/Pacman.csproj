@@ -38,6 +38,9 @@
   <PropertyGroup>
     <StartupObject>Pacman.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Style\Icon\Icon32px.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -154,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Style\Textures\Fruits.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Style\Icon\Icon32px.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
