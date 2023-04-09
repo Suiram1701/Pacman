@@ -102,6 +102,7 @@ namespace Pacman
 
             // Setup game loop
             GameLoop.Elapsed += PointCheck;
+            GameLoop.Elapsed += LevelCheck;
             GameLoop.Start();
         }
 
@@ -244,6 +245,36 @@ namespace Pacman
         }
 
         /// <summary>
+        /// Check if level is done
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LevelCheck(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    // If level is done reset all
+                    if (Canvas.Children.OfType<ICollectable>().Count() == 0)
+                    {
+                        Level++;
+
+                        ResetFigures();
+                        foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                            Figure.Stop();
+
+                        ResetPoints();
+                    }
+                }, DispatcherPriority.Loaded);
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+        }
+
+        /// <summary>
         /// Distance between points
         /// </summary>
         private const int Distance = 24;
@@ -313,22 +344,24 @@ namespace Pacman
             Color Border = Color.FromArgb(33, 33, 222);     // Map border color
             Color ExtraBorderC = HouseBorder ? Color.FromArgb(255, 184, 222) : Color.Transparent;     // Color of ghosts house door 
 
-            using (Bitmap Bmp = Textures.Map.Clone(Rect, Textures.Map.PixelFormat))
+            try
             {
-                for (int y = 0; y < Bmp.Height; y++)
+                using (Bitmap Bmp = Textures.Map.Clone(Rect, Textures.Map.PixelFormat))
                 {
-                    for (int x = 0; x < Bmp.Width; x++)
+                    for (int y = 0; y < Bmp.Height; y++)
                     {
-                        if (Bmp.GetPixel(x, y) == Border || Bmp.GetPixel(x, y) == ExtraBorderC)
+                        for (int x = 0; x < Bmp.Width; x++)
                         {
-                            Bmp.Dispose();
-                            return false;
+                            if (Bmp.GetPixel(x, y) == Border || Bmp.GetPixel(x, y) == ExtraBorderC)
+                            {
+                                Bmp.Dispose();
+                                return false;
+                            }
                         }
                     }
                 }
+                return true;
             }
-            return true;
-        }
             catch
             {
                 return false;

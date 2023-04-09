@@ -35,6 +35,9 @@ namespace Pacman.Figures
             get => (Direction)GetValue(DirectionProperty);
             set
             {
+                if (!IsAnimated)
+                    return;
+
                 int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -20 : value == Direction.Right ? +20 : 0);     // X Position to check direction
                 int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -20 : value == Direction.Down ? +20 : 0);     // Y Position to check direction
 
@@ -191,7 +194,7 @@ namespace Pacman.Figures
             }
         }
 
-        public bool IsAnimated { get; set; }
+        public bool IsAnimated { get; set; } = true;
 
         public Storyboard Story { get; } = new Storyboard();
 
@@ -217,6 +220,7 @@ namespace Pacman.Figures
             {
                 Story.Pause();
                 Timer.Stop();
+                Direction = Direction.None;
             }
 
             IsAnimated = false;
