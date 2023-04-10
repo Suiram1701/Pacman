@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pacman", "Pacman\Pacman.csproj", "{93B42E43-A613-481D-B8E2-D27751635216}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathFinding", "PathFinding\PathFinding.csproj", "{A6B7732A-F39B-43EA-9978-000D232E0588}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,14 +17,18 @@ Global
 		{93B42E43-A613-481D-B8E2-D27751635216}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93B42E43-A613-481D-B8E2-D27751635216}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93B42E43-A613-481D-B8E2-D27751635216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6B7732A-F39B-43EA-9978-000D232E0588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6B7732A-F39B-43EA-9978-000D232E0588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6B7732A-F39B-43EA-9978-000D232E0588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6B7732A-F39B-43EA-9978-000D232E0588}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {28A701F4-F748-48C9-8F54-2392D68A100B}
-		RESX_AutoCreateNewLanguageFiles = True
-		RESX_ShowErrorsInErrorList = True
 		RESX_SortFileContentOnSave = True
+		RESX_ShowErrorsInErrorList = True
+		RESX_AutoCreateNewLanguageFiles = True
+		SolutionGuid = {28A701F4-F748-48C9-8F54-2392D68A100B}
 	EndGlobalSection
 EndGlobal

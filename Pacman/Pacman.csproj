@@ -177,5 +177,11 @@
   <ItemGroup>
     <None Include="Resources\Points.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PathFinding\PathFinding.csproj">
+      <Project>{a6b7732a-f39b-43ea-9978-000d232e0588}</Project>
+      <Name>PathFinding</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
