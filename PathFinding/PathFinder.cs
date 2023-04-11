@@ -32,8 +32,8 @@ namespace PathFinding
         /// <param name="PacmanPos">Terget pos (Pacman)</param>
         public PathFinder(Point GhostPos, Point PacmanPos)
         {
-            this.GhostPos = new Point(GhostPos.X - 1, GhostPos.Y - 1);
-            this.PacmanPos = new Point(PacmanPos.X - 1, PacmanPos.Y - 1);
+            this.GhostPos = new Point(GhostPos.X, GhostPos.Y - 1);
+            this.PacmanPos = new Point(PacmanPos.X, PacmanPos.Y - 1);
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace PathFinding
 
             }
             try
-            {/*
+            {
                 if (BoolMap[(int)GhostPos.Y][(int)GhostPos.X + 1])
-                    AvailableDirects.Add(Direction.Right);*/
+                    AvailableDirects.Add(Direction.Right);
             }
             catch
             {
@@ -115,7 +115,7 @@ namespace PathFinding
 
             // If any task found a path return
             if (Cts.IsCancellationRequested)
-                return null;
+                return CurrentPath;
 
             // Check which directions are valid
             List<Direction> AvailableDirects = new List<Direction>();
