@@ -26,21 +26,26 @@ namespace PathFinding
         private readonly Point PacmanPos;
 
         /// <summary>
+        /// Token to cancel all tasks
+        /// </summary>
+        private CancellationToken Ct;
+
+        /// <summary>
         /// Init new Pathfinder
         /// </summary>
         /// <param name="GhostPos">Own pos</param>
         /// <param name="PacmanPos">Terget pos (Pacman)</param>
         public PathFinder(Point GhostPos, Point PacmanPos)
         {
-            this.GhostPos = new Point(GhostPos.X, GhostPos.Y - 1);
-            this.PacmanPos = new Point(PacmanPos.X, PacmanPos.Y - 1);
+            this.GhostPos = new Point(GhostPos.X, GhostPos.Y);
+            this.PacmanPos = new Point(PacmanPos.X, PacmanPos.Y);
         }
 
         /// <summary>
         /// Calculate the shortest path to pacman
         /// </summary>
         /// <returns>Shortest path</returns>
-        public async Task<List<Point>> GetPath()
+        public async Task<List<Point>> GetPathAsync()
         {
             // Check which directions are valid
             List<Direction> AvailableDirects = new List<Direction>();
@@ -85,14 +90,21 @@ namespace PathFinding
 
             // New tasks for each branch
             CancellationTokenSource Cts = new CancellationTokenSource();
-            Task<List<Point>>[] Finders = AvailableDirects.Select(dir => Task.Run(() => GetPathInternal(GhostPos, dir, Cts) )).ToArray();
+            Ct = Cts.Token;
+            Task<List<Point>>[] Finders = AvailableDirects.Select(dir => Task.Run(() => GetPathInternal(GhostPos, dir) )).ToArray();
 
             // Cancel if one finished
-            int FinishedTask = Task.WaitAny(Finders, 10000, Cts.Token);
+            int FinishedTask = Task.WaitAny(Finders, 10000);
             Cts.Cancel();
 
             if (FinishedTask < 0)
-                return await Finders[0];
+            {
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("<!--     No path found!     --!>");
+#endif
+
+                return new List<Point>();
+            }
 
             return await Finders[FinishedTask];
         }
@@ -105,17 +117,34 @@ namespace PathFinding
         /// <param name="Ct">Cancel token</param>
         /// <param name="CurrentPath">Previous path</param>
         /// <returns></returns>
-        private List<Point> GetPathInternal(Point StartPos, Direction Direct, CancellationTokenSource Cts, List<Point> CurrentPath = null)
+        private List<Point> GetPathInternal(Point StartPos, Direction Direct, List<Point> CurrentPath = null)
         {
             // Setup
             CurrentPath = CurrentPath ?? new List<Point>();
             Point p = StartPos;
-
+            
+            // First move
+            switch (Direct)
+            {
+                case Direction.Left:
+                    p.X--;
+                    break;
+                case Direction.Down:
+                    p.Y++;
+                    break;
+                case Direction.Right:
+                    p.X++;
+                    break;
+                case Direction.Up:
+                    p.Y--;
+                    break;
+            }
+            
         Direction:
 
             // If any task found a path return
-            if (Cts.IsCancellationRequested)
-                return CurrentPath;
+            if (Ct.IsCancellationRequested)
+                return null;
 
             // Check which directions are valid
             List<Direction> AvailableDirects = new List<Direction>();
@@ -168,7 +197,7 @@ namespace PathFinding
                     case Direction.Down:
                         return new Point(p.X, p.Y + 1);
                     case Direction.Right:
-                        return new Point(p.X + 2, p.Y);
+                        return new Point(p.X + 1, p.Y);
                     case Direction.Up:
                         return new Point(p.X, p.Y - 1);
                     default:
@@ -208,13 +237,11 @@ namespace PathFinding
                             break;
                     }
 
-                    return Task.Run(() => GetPathInternal(point, dir, Cts, CurrentPath));
+                    return Task.Run(() => GetPathInternal(point, dir, new List<Point>(CurrentPath)));
                 }).ToArray();
 
                 // Cancel if one finished
                 int FinishedTask = Task.WaitAny(Crossing);
-                Cts.Cancel();
-
                 return Crossing[FinishedTask].Result;
             }
             else if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count == 1)     // Switch direction on curve
@@ -262,7 +289,6 @@ namespace PathFinding
                 }
                 goto Direction;
             }
-
         }
     }
 }
