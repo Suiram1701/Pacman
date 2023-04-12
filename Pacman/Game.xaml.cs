@@ -27,6 +27,7 @@ using System.Threading;
 using Timer = System.Timers.Timer;
 using System.Windows.Media.Animation;
 using System.Windows.Media.TextFormatting;
+using PointD = System.Windows.Point;
 
 namespace Pacman
 {
@@ -97,6 +98,9 @@ namespace Pacman
         /// </summary>
         private readonly Timer GameLoop = new Timer(30);
 
+        /// <summary>
+        /// Countdown animation animation
+        /// </summary>
         private readonly Storyboard Story = new Storyboard();
 
         public Game()
@@ -113,7 +117,7 @@ namespace Pacman
             else
                 Hightscore = 0;
 
-            // Setup keyframes
+            // Setup Start animation
             ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("3", TimeSpan.FromSeconds(0)));
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame("2", TimeSpan.FromSeconds(1)));
@@ -144,10 +148,13 @@ namespace Pacman
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Counter_Completet(object sender, EventArgs e)
+        private async void Counter_Completet(object sender, EventArgs e)
         {
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
                 Figure.Start();
+
+            // Let the ghosts out
+            await GhostsGoOutAsync();
         }
 
         /// <summary>
@@ -188,6 +195,40 @@ namespace Pacman
             // Stop figures
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
                 Figure.Stop();
+        }
+
+        /// <summary>
+        /// Activate ghost go outside animation
+        /// </summary>
+        private async Task GhostsGoOutAsync()
+        {   
+            await Task.Run(() =>
+            {
+                // Give all ghosts the path in order
+                Thread.Sleep(5000);
+                Dispatcher.Invoke(() =>
+                {
+                    Canvas.SetLeft(Purple, 317);
+                    Canvas.SetTop(Purple, 259);
+                    Purple.IsOutside = true;
+                }, DispatcherPriority.Loaded);
+
+                Thread.Sleep(5000);
+                Dispatcher.Invoke(() =>
+                {
+                    Canvas.SetLeft(Cyan, 317);
+                    Canvas.SetTop(Cyan, 259);
+                    Cyan.IsOutside = true;
+                }, DispatcherPriority.Loaded);
+
+                Thread.Sleep(5000);
+                Dispatcher.Invoke(() =>
+                {
+                    Canvas.SetLeft(Orange, 317);
+                    Canvas.SetTop(Orange, 259);
+                    Orange.IsOutside = true;
+                }, DispatcherPriority.Loaded);
+            });
         }
 
         #region Points
@@ -346,6 +387,7 @@ namespace Pacman
                     {
                         Level++;
 
+                        // Game restart and a level up
                         ResetFigures();
                         foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
                             Figure.Stop();
@@ -362,6 +404,9 @@ namespace Pacman
             }
         }
 
+        /// <summary>
+        /// <see langword="true"/> if fruit allready spawned in this level
+        /// </summary>
         private bool FruitSpawned = false;
 
         /// <summary>
@@ -420,7 +465,11 @@ namespace Pacman
         /// <summary>
         /// Calculate if the element is in Field
         /// </summary>
-        /// <param name="Figure">Element to check</param>
+        /// <param name="X">X position of the element</param>
+        /// <param name="Y">Y position of the element</param>
+        /// <param name="Height">Height of the element</param>
+        /// <param name="Widht">Widht of the element</param>
+        /// <param name="HouseBorder"><see langword="false"/> when the figure can go into ghosts house</param>
         /// <returns>True if is in field and false when not</returns>
         public static bool IsInField(int X, int Y, int Height, int Widht, bool HouseBorder = true)
         {
@@ -433,7 +482,7 @@ namespace Pacman
 
             Rectangle Rect = new Rectangle((int)MapedX, (int)MapedY, (int)MapedWidht, (int)MapedHeight);
             Color Border = Color.FromArgb(33, 33, 222);     // Map border color
-            Color ExtraBorderC = HouseBorder ? Color.FromArgb(255, 184, 222) : Color.Transparent;     // Color of ghosts house door 
+            Color ExtraBorderC = HouseBorder ? Color.FromArgb(255, 184, 222) : Color.White;     // Color of ghosts house door 
 
             try
             {

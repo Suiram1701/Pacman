@@ -131,7 +131,7 @@ namespace Pacman.Figures
         /// <summary>
         /// Path to follow pacman
         /// </summary>
-        private List<Point> Path = new List<Point>();
+        public List<Point> Path = new List<Point>();
 
         /// <summary>
         /// Trigger actions to move ghost
@@ -194,7 +194,7 @@ namespace Pacman.Figures
 #endif
                     }
 #if DEBUG
-                    // If ghost is for more than 1s stuck reset
+                    // If ghost is for more than 1s stuck goto next path point
                     if (Sw.ElapsedMilliseconds > 2500)
                     {
 #if DEBUG
