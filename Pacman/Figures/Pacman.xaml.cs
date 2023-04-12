@@ -89,7 +89,7 @@ namespace Pacman.Figures
         private Direction PreviewDirection = Direction.None;
         private int ToleranceRounds = 0;
 
-        public Timer Timer { get; } = new Timer(30);
+        public Timer Timer { get; } = new Timer(20);
 
         public Pacman()
         {
@@ -163,22 +163,22 @@ namespace Pacman.Figures
                         case Direction.Left:
                             if (!IsInField((int)Canvas.GetLeft(this) - 7, (int)Canvas.GetTop(this), (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 7);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 5);
                             break;
                         case Direction.Down:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) + 7);
+                            Canvas.SetTop(this, Canvas.GetTop(this) + 5);
                             break;
                         case Direction.Right:
                             if (!IsInField((int)Canvas.GetLeft(this) + 7, (int)Canvas.GetTop(this), (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 7);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 5);
                             break;
                         case Direction.Up:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) - 7);
+                            Canvas.SetTop(this, Canvas.GetTop(this) - 5);
                             break;
                     }
                     Story.Resume();

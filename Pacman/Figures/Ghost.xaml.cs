@@ -23,6 +23,7 @@ using PathFinding;
 using Pacman.Extension;
 using Image = System.Windows.Controls.Image;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Pacman.Figures
 {
@@ -70,8 +71,8 @@ namespace Pacman.Figures
                 if (!IsAnimated)
                     return;
 
-                int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -20 : value == Direction.Right ? +20 : 0);     // X Position to check direction
-                int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -20 : value == Direction.Down ? +20 : 0);     // Y Position to check direction
+                int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -25 : value == Direction.Right ? +25 : 0);     // X Position to check direction
+                int PreviewY = (int)Canvas.GetTop(this) + (value == Direction.Up ? -25 : value == Direction.Down ? +25 : 0);     // Y Position to check direction
 
                 // Check if direction go not in a wall
                 if (!IsInField(PreviewX, PreviewY, (int)Height, (int)Width, HouseBorder: false))
@@ -85,9 +86,6 @@ namespace Pacman.Figures
                 // Reset tolerance
                 ToleranceRounds = 0;
                 PreviewDirection = Direction.None;
-
-                if (IsOutside)
-                    System.Diagnostics.Debug.WriteLine($"{(int)Color}, {(int)value - 1}");
 
                 // Change texture direction
                 if (value != 0)
@@ -135,7 +133,12 @@ namespace Pacman.Figures
         /// </summary>
         private List<Point> Path = new List<Point>();
 
-        public Timer Timer { get; } = new Timer(30);
+        /// <summary>
+        /// Trigger actions to move ghost
+        /// </summary>
+        public Timer Timer { get; } = new Timer(25);
+
+        private Stopwatch Sw = new Stopwatch();
 
         public Ghost()
         {
@@ -182,6 +185,7 @@ namespace Pacman.Figures
 
                     // If path followed get new path
                     PathFinding:
+                    Sw.Start();
                     if (Path.Count <= 0 && IsOutside)
                     {
                         Path = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetPath().Take(10).ToList();     // Follow only last 10 points
@@ -190,6 +194,17 @@ namespace Pacman.Figures
 #endif
                     }
 #if DEBUG
+                    // If ghost is for more than 1s stuck reset
+                    if (Sw.ElapsedMilliseconds > 2500)
+                    {
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine($"<!--     {Color}: RESET!     --!>");
+#endif
+                        Sw.Reset();
+                        Path.Clear();
+                        goto PathFinding;
+                    }
+
                     Point a = this.GetPosition();
                     Point b = Path[0];
                     double _distanceX_ = a.X >= b.X ? a.X - b.X : b.X - a.X;
@@ -218,6 +233,7 @@ namespace Pacman.Figures
                         System.Diagnostics.Debug.WriteLine($"<!-- {Color}: Next point!     --!>");
 #endif
                         Path.Remove(Path[0]);
+                        Sw.Reset();
                         goto PathFinding;
                     }
 
@@ -241,34 +257,27 @@ namespace Pacman.Figures
                         }
                     }
 
-                    // Teleport between the two sides
-                    if (Canvas.GetLeft(this) > 608 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
-                        Canvas.SetLeft(this, 8);
-
-                    else if (Canvas.GetLeft(this) < 8 && Canvas.GetTop(this) >= 313 && Canvas.GetTop(this) <= 387)
-                        Canvas.SetLeft(this, 608);
-
                     switch (Direction)     // Check if figure dont hit a wall and move
                     {
                         case Direction.Left:
                             if (!IsInField((int)Canvas.GetLeft(this) - 7, (int)Canvas.GetTop(this), (int)Height, (int)Width, HouseBorder: false))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 7);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 5);
                             break;
                         case Direction.Down:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width, HouseBorder: false))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) + 7);
+                            Canvas.SetTop(this, Canvas.GetTop(this) + 5);
                             break;
                         case Direction.Right:
                             if (!IsInField((int)Canvas.GetLeft(this) + 7, (int)Canvas.GetTop(this), (int)Height, (int)Width, HouseBorder: false))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 7);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 5);
                             break;
                         case Direction.Up:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width, HouseBorder: false))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) - 7);
+                            Canvas.SetTop(this, Canvas.GetTop(this) - 5);
                             break;
                     }
                     Story.Resume();
@@ -310,6 +319,8 @@ namespace Pacman.Figures
         {
             if (IsAnimated)
             {
+                // Reset all
+                Path.Clear();
                 Story.Pause();
                 Timer.Stop();
                 Direction = Direction.None;
