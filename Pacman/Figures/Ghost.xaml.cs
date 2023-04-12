@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 using static Pacman.Game;
+using PathFinding;
 
 namespace Pacman.Figures
 {
@@ -117,6 +118,11 @@ namespace Pacman.Figures
 
         public Timer Timer { get; } = new Timer(40);
 
+        /// <summary>
+        /// Path to follow pacman
+        /// </summary>
+        private List<Point> Path = new List<Point>();
+
         public Ghost()
         {
             InitializeComponent();
@@ -137,7 +143,7 @@ namespace Pacman.Figures
             Storyboard.SetTargetProperty(Animation, new PropertyPath(Image.SourceProperty));
 
             // Setup movement timer
-            Timer.Elapsed += MoveFigure;
+            //Timer.Elapsed += MoveFigure;
 
             // Start
             Story.Begin();
@@ -154,8 +160,22 @@ namespace Pacman.Figures
         {
             try
             {
-                Dispatcher.Invoke(() =>
-                {
+                Dispatcher.Invoke( () =>
+                {/*
+                    // If path followed get new path
+                    if (Path.Count <= 0)
+                    {
+                        Point StartPos = new Point(20, 19);
+                        int Factor = 23;
+                        Path = new List<Point>(
+                            await new PathFinder(new Point(((int)Canvas.GetLeft(this) + (int)StartPos.X) / Factor,
+                            ((int)Canvas.GetTop(this) + (int)StartPos.Y) / Factor), new Point(((int)Canvas.GetLeft(this) + (int)StartPos.X) / Factor,
+                            ((int)Canvas.GetTop(this) + (int)StartPos.Y) / Factor)).GetPathAsync());
+                        Path = Path.Take(5).ToList();     // Follow only 5 than new
+                    }
+                    */
+                    // TODO: NOT Finished!!!!!
+
                     // Direction chage tolerance
                     if (PreviewDirection != Direction.None)
                     {

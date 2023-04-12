@@ -85,6 +85,27 @@ namespace PathFinding
         /// <summary>
         /// Map in bool array
         /// </summary>
-        public static bool[][] BoolMap { get; private set; } = new bool[29][];
+        private static bool[][] BoolMap { get; set; } = new bool[29][];
+
+        /// <summary>
+        /// Check if give position is inside the map
+        /// </summary>
+        /// <param name="p">Point to check</param>
+        /// <returns>If the given position is inside the it returns <see langword="true"/></returns>
+        public static bool CheckInsideMap(Point p)
+        {
+            // If outside map intercept exeption
+            try
+            {
+                // Check
+                if (BoolMap[(int)p.Y][(int)p.X])
+                    return true;
+            }
+            catch
+            {
+            }
+
+            return false;
+        }
     }
 }

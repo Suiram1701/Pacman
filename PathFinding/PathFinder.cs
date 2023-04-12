@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,11 +27,6 @@ namespace PathFinding
         private readonly Point PacmanPos;
 
         /// <summary>
-        /// Token to cancel all tasks
-        /// </summary>
-        private CancellationToken Ct;
-
-        /// <summary>
         /// Init new Pathfinder
         /// </summary>
         /// <param name="GhostPos">Own pos</param>
@@ -45,249 +41,110 @@ namespace PathFinding
         /// Calculate the shortest path to pacman
         /// </summary>
         /// <returns>Shortest path</returns>
-        public async Task<List<Point>> GetPathAsync()
+        public IEnumerable<Point> GetPath()
         {
             // Check which directions are valid
-            List<Direction> AvailableDirects = new List<Direction>();
-            #region Directions
-            try
-            {
-                if ((BoolMap[(int)GhostPos.Y][(int)GhostPos.X - 1]))
-                    AvailableDirects.Add(Direction.Left);
-            }
-            catch
-            {
+            List<Direction> AvailableDirs = GetDirections(GhostPos).ToList();
 
-            }
-            try
+            // Get nearest direction to pacman
+            Direction Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
+
+            // Setup
+            Point Pos = GhostPos;
+
+            // Set Timeout to calculate
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            while (sw.ElapsedMilliseconds <= 1000)
             {
-                if (BoolMap[(int)GhostPos.Y + 1][(int)GhostPos.X])
-                    AvailableDirects.Add(Direction.Down);
+                // First move
+                Pos = CalculateWithDirect(Pos, Direct);
+                // Check which directions are valid
+                List<Direction> AvailableDirects = GetDirections(Pos, Direct).ToList();
+
+                // If near at pacman return
+                IEnumerable<Point> NearPositions = AvailableDirects.Select(Dir => CalculateWithDirect(Pos, Dir));
+                Point NearAtPacman = NearPositions.FirstOrDefault(point => point == PacmanPos);
+
+                if (NearPositions.Any(pos => pos == PacmanPos))
+                {
+                    yield return NearAtPacman;
+                    break;
+                }
+
+                if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count > 1)     // Get shortest direction
+                {
+                    // Get nearest direction to pacman
+                    Direction direction = AvailableDirects.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
+                    Direct = direction;
+                    yield return Pos;
+                }
+                else if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count == 1)     // Switch direction on curve
+                {
+                    // Add curve
+                    Direct = AvailableDirects[0];
+                    yield return Pos;
+                }
+                else     // Follow current direction
+                    yield return Pos;
             }
-            catch
-            {
-
-            }
-            try
-            {
-                if (BoolMap[(int)GhostPos.Y][(int)GhostPos.X + 1])
-                    AvailableDirects.Add(Direction.Right);
-            }
-            catch
-            {
-
-            }
-            try
-            {
-                if (BoolMap[(int)GhostPos.Y - 1][(int)GhostPos.X])
-                    AvailableDirects.Add(Direction.Up);
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            // New tasks for each branch
-            CancellationTokenSource Cts = new CancellationTokenSource();
-            Ct = Cts.Token;
-            Task<List<Point>>[] Finders = AvailableDirects.Select(dir => Task.Run(() => GetPathInternal(GhostPos, dir) )).ToArray();
-
-            // Cancel if one finished
-            int FinishedTask = Task.WaitAny(Finders, 10000);
-            Cts.Cancel();
-
-            if (FinishedTask < 0)
-            {
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine("<!--     No path found!     --!>");
-#endif
-
-                return new List<Point>();
-            }
-
-            return await Finders[FinishedTask];
+            sw.Stop();
         }
 
         /// <summary>
-        /// Continue at a point in a direction
+        /// Calculate distance between two points
         /// </summary>
-        /// <param name="StartPos"><see cref="Point"/> to continue</param>
-        /// <param name="Direct"><see cref="Direction"/> to continue</param>
-        /// <param name="Ct">Cancel token</param>
-        /// <param name="CurrentPath">Previous path</param>
-        /// <returns></returns>
-        private List<Point> GetPathInternal(Point StartPos, Direction Direct, List<Point> CurrentPath = null)
+        /// <param name="a">Point one</param>
+        /// <param name="b">Point two</param>
+        /// <returns>Distance between them</returns>
+        private double GetDistance(Point a, Point b)
         {
-            // Setup
-            CurrentPath = CurrentPath ?? new List<Point>();
-            Point p = StartPos;
-            
-            // First move
+            double distanceX = a.X >= b.X ? a.X - b.X : b.X - a.X;
+            double distanceY = a.Y >= b.Y ? a.Y - b.Y : b.Y - a.Y;
+            return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+        }
+
+        /// <summary>
+        /// Get all possible directions of this position
+        /// </summary>
+        /// <param name="Position">Current position to look</param>
+        /// <param name="CurrentDirect">Current direction (if set the opposite will not return)</param>
+        /// <returns></returns>
+        private IEnumerable<Direction> GetDirections(Point Position, Direction CurrentDirect = Direction.None)
+        {
+            if (CheckInsideMap(CalculateWithDirect(Position, Direction.Left)) && CurrentDirect != Direction.Right)
+                yield return Direction.Left;
+
+            if (CheckInsideMap(CalculateWithDirect(Position, Direction.Down)) && CurrentDirect != Direction.Up)
+                yield return Direction.Down;
+
+            if (CheckInsideMap(CalculateWithDirect(Position, Direction.Right)) && CurrentDirect != Direction.Left)
+                yield return Direction.Right;
+
+            if (CheckInsideMap(CalculateWithDirect(Position, Direction.Up)) && CurrentDirect != Direction.Down)
+                yield return Direction.Up;
+        }
+
+        /// <summary>
+        /// Calculate the <paramref name="P"/> with the <paramref name="Direct"/>
+        /// </summary>
+        /// <param name="p">Position to calculate</param>
+        /// <param name="Direct">Direction to calvulate</param>
+        /// <returns>The result</returns>
+        private Point CalculateWithDirect(Point p, Direction Direct)
+        {
             switch (Direct)
             {
                 case Direction.Left:
-                    p.X--;
-                    break;
+                    return new Point(--p.X, p.Y);
                 case Direction.Down:
-                    p.Y++;
-                    break;
+                    return new Point(p.X, ++p.Y);
                 case Direction.Right:
-                    p.X++;
-                    break;
+                    return new Point(++p.X, p.Y);
                 case Direction.Up:
-                    p.Y--;
-                    break;
-            }
-            
-        Direction:
-
-            // If any task found a path return
-            if (Ct.IsCancellationRequested)
-                return null;
-
-            // Check which directions are valid
-            List<Direction> AvailableDirects = new List<Direction>();
-            #region Directions
-            try
-            {
-                if ((BoolMap[(int)p.Y][(int)p.X - 1]) && Direct != Direction.Right)
-                    AvailableDirects.Add(Direction.Left);
-            }
-            catch
-            {
-
-            }
-            try
-            {
-                if (BoolMap[(int)p.Y + 1][(int)p.X] && Direct != Direction.Up)
-                    AvailableDirects.Add(Direction.Down);
-            }
-            catch
-            {
-                
-            }
-            try
-            {
-                if (BoolMap[(int)p.Y][(int)p.X + 1] && Direct != Direction.Left)
-                    AvailableDirects.Add(Direction.Right);
-            }
-            catch
-            {
-
-            }
-            try
-            {
-                if (BoolMap[(int)p.Y - 1][(int)p.X] && Direct != Direction.Down)
-                    AvailableDirects.Add(Direction.Up);
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            // If near at pacman return
-            IEnumerable<Point> NearPositions = AvailableDirects.Select(Dir =>
-            {
-                switch (Dir)
-                {
-                    case Direction.Left:
-                        return new Point(p.X - 1, p.Y);
-                    case Direction.Down:
-                        return new Point(p.X, p.Y + 1);
-                    case Direction.Right:
-                        return new Point(p.X + 1, p.Y);
-                    case Direction.Up:
-                        return new Point(p.X, p.Y - 1);
-                    default:
-                        return new Point();
-                }
-            });
-            Point NearAtPacman = NearPositions.FirstOrDefault(point => point == PacmanPos);
-
-            if (NearPositions.Any(pos => pos == PacmanPos))
-            {
-                CurrentPath.Add(NearAtPacman);
-                return CurrentPath;
-            }
-
-            if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count > 1)     // New tasks on crossing
-            {
-                CurrentPath.Add(p);
-
-                // New tasks for each branch
-                Task<List<Point>>[] Crossing = AvailableDirects.Select(dir =>
-                {
-                    // Postpone coordinate
-                    Point point = p;
-                    switch (dir)
-                    {
-                        case Direction.Left:
-                            point.X--;
-                            break;
-                        case Direction.Down:
-                            point.Y++;
-                            break;
-                        case Direction.Right:
-                            point.X++;
-                            break;
-                        case Direction.Up:
-                            point.Y--;
-                            break;
-                    }
-
-                    return Task.Run(() => GetPathInternal(point, dir, new List<Point>(CurrentPath)));
-                }).ToArray();
-
-                // Cancel if one finished
-                int FinishedTask = Task.WaitAny(Crossing);
-                return Crossing[FinishedTask].Result;
-            }
-            else if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count == 1)     // Switch direction on curve
-            {
-                CurrentPath.Add(p);
-
-                // Postpone coordinate
-                switch (Direct)
-                {
-                    case Direction.Left:
-                        p.X--;
-                        break;
-                    case Direction.Down:
-                        p.Y++;
-                        break;
-                    case Direction.Right:
-                        p.X++;
-                        break;
-                    case Direction.Up:
-                        p.Y--;
-                        break;
-                }
-                Direct = AvailableDirects[0];
-                goto Direction;
-            }
-            else     // Follow current direction
-            {
-                CurrentPath.Add(p);
-
-                // Postpone coordinate
-                switch (Direct)
-                {
-                    case Direction.Left:
-                        p.X--;
-                        break;
-                    case Direction.Down:
-                        p.Y++;
-                        break;
-                    case Direction.Right:
-                        p.X++;
-                        break;
-                    case Direction.Up:
-                        p.Y--;
-                        break;
-                }
-                goto Direction;
+                    return new Point(p.X, --p.Y);
+                default:
+                    return p;
             }
         }
     }
