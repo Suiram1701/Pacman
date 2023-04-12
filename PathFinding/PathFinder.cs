@@ -47,15 +47,23 @@ namespace PathFinding
             List<Direction> AvailableDirs = GetDirections(GhostPos).ToList();
 
             // Get nearest direction to pacman
-            Direction Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
-
+            Direction Direct;
+            try
+            {
+                Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
+            }
+            catch
+            {
+                yield break;
+            }
+     
             // Setup
             Point Pos = GhostPos;
 
             // Set Timeout to calculate
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            while (sw.ElapsedMilliseconds <= 100000)
+            while (sw.ElapsedMilliseconds <= 2500)
             {
                 // First move
                 Pos = CalculateWithDirect(Pos, Direct);
@@ -75,8 +83,15 @@ namespace PathFinding
                 if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count > 1)     // Get shortest direction
                 {
                     // Get nearest direction to pacman
-                    Direction direction = AvailableDirects.OrderBy(Dir => GetDistance(CalculateWithDirect(Pos, Dir), PacmanPos)).ToArray()[0];
-                    Direct = direction;
+                    try
+                    {
+                        Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
+                    }
+                    catch
+                    {
+                        yield break;
+                    }
+
                     yield return Pos;
                 }
                 else if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count == 1)     // Switch direction on curve
