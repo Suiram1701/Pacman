@@ -22,6 +22,7 @@ using static Pacman.Game;
 using PathFinding;
 using Pacman.Extension;
 using Image = System.Windows.Controls.Image;
+using System.ComponentModel;
 
 namespace Pacman.Figures
 {
@@ -56,7 +57,7 @@ namespace Pacman.Figures
 
                 // Update texture
                 AnimationKeyFrames[0].Value = TextureHelper[(int)value, (int)Direction - 1];
-                AnimationKeyFrames[1].Value = TextureHelper[(int)value, (int)Direction + 4 - 1];
+                AnimationKeyFrames[1].Value = TextureHelper[(int)value, (int)Direction + 3];
             }
         }
 
@@ -85,15 +86,16 @@ namespace Pacman.Figures
                 ToleranceRounds = 0;
                 PreviewDirection = Direction.None;
 
+                if (IsOutside)
+                    System.Diagnostics.Debug.WriteLine($"{(int)Color}, {(int)value - 1}");
+
                 // Change texture direction
                 if (value != 0)
                 {
-                    int Index = (int)value - 1 >= 0 ? (int)value - 1 : 1;
-
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, Index];
-                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, Index + 4];
+                    AnimationKeyFrames[0].Value = TextureHelper[(int)Color, (int)value - 1];
+                    AnimationKeyFrames[1].Value = TextureHelper[(int)Color, (int)value + 3];
                     Story.Begin();
                 }
                 else
@@ -144,9 +146,8 @@ namespace Pacman.Figures
             Animation.Duration = TimeSpan.FromMilliseconds(150);
             Animation.RepeatBehavior = RepeatBehavior.Forever;
 
-            int DirectionIndex = (int)Direction - 1 >= 0 ? (int)Direction - 1 : 1;
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, DirectionIndex], TimeSpan.FromMilliseconds(0)));
-            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, DirectionIndex + 4], TimeSpan.FromMilliseconds(75)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, 1], TimeSpan.FromMilliseconds(0)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[(int)Color, 5], TimeSpan.FromMilliseconds(75)));
             AnimationKeyFrames = Animation.KeyFrames.Cast<ObjectKeyFrame>().ToList();
 
             // Setup animation
@@ -157,8 +158,10 @@ namespace Pacman.Figures
             // Setup movement timer
             Timer.Elapsed += MoveFigure;
 
-            // Start
+            // Start only if it isnt in xaml designer
             Story.Begin();
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+                return;
             Timer.Start();
         }
 
@@ -273,7 +276,7 @@ namespace Pacman.Figures
 
                 Stop:     // Figure stop
                     Story.Pause();
-                    Texture.Source = TextureHelper[(int)Direction, 0];
+                    Texture.Source = TextureHelper[(int)Direction, 1];
 
                 }, DispatcherPriority.Render);
             }

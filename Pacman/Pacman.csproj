@@ -68,6 +68,7 @@
       <DependentUpon>Fruit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Collectable\ICollectable.cs" />
+    <Compile Include="Extension\IFigurecs.cs" />
     <Compile Include="Extension\Image.cs" />
     <Compile Include="Figures\Ghost.xaml.cs">
       <DependentUpon>Ghost.xaml</DependentUpon>
@@ -152,8 +153,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Style\Textures\Textures.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Textures.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Textures.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -164,18 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Style\Textures\Ghost.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Fruits.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Map.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pacman.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Points.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PathFinding\PathFinding.csproj">
