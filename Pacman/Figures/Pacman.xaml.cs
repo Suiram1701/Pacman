@@ -21,6 +21,8 @@ namespace Pacman.Figures
     /// </summary>
     public partial class Pacman : UserControl, IFigure
     {
+        public static Pacman Instance { get; private set; }
+
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
@@ -92,6 +94,7 @@ namespace Pacman.Figures
         public Pacman()
         {
             InitializeComponent();
+            Instance = this;
 
             // Setup keyframes
             ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();

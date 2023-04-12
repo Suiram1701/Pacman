@@ -20,6 +20,8 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 using static Pacman.Game;
 using PathFinding;
+using Pacman.Extension;
+using Image = System.Windows.Controls.Image;
 
 namespace Pacman.Figures
 {
@@ -116,12 +118,22 @@ namespace Pacman.Figures
         private Direction PreviewDirection = Direction.None;
         private int ToleranceRounds = 0;
 
-        public Timer Timer { get; } = new Timer(40);
+        /// <summary>
+        /// <see langword="true"/> if the ghost is outside the house
+        /// </summary>
+        public static readonly DependencyProperty IsOutsideProperty = DependencyProperty.Register("IsOutside", typeof(bool), typeof(Ghost), new PropertyMetadata(false));
+        public bool IsOutside
+        {
+            get => (bool)GetValue(IsOutsideProperty);
+            set => SetValue(IsOutsideProperty, value);
+        }
 
         /// <summary>
         /// Path to follow pacman
         /// </summary>
         private List<Point> Path = new List<Point>();
+
+        public Timer Timer { get; } = new Timer(30);
 
         public Ghost()
         {
@@ -143,7 +155,7 @@ namespace Pacman.Figures
             Storyboard.SetTargetProperty(Animation, new PropertyPath(Image.SourceProperty));
 
             // Setup movement timer
-            //Timer.Elapsed += MoveFigure;
+            Timer.Elapsed += MoveFigure;
 
             // Start
             Story.Begin();
@@ -160,21 +172,51 @@ namespace Pacman.Figures
         {
             try
             {
-                Dispatcher.Invoke( () =>
-                {/*
+                Dispatcher.Invoke(() =>
+                {
+                    if (!IsOutside)     // Only move when outside
+                        return;
+
                     // If path followed get new path
-                    if (Path.Count <= 0)
+                    PathFinding:
+                    if (Path.Count <= 0 && IsOutside)
                     {
-                        Point StartPos = new Point(20, 19);
-                        int Factor = 23;
-                        Path = new List<Point>(
-                            await new PathFinder(new Point(((int)Canvas.GetLeft(this) + (int)StartPos.X) / Factor,
-                            ((int)Canvas.GetTop(this) + (int)StartPos.Y) / Factor), new Point(((int)Canvas.GetLeft(this) + (int)StartPos.X) / Factor,
-                            ((int)Canvas.GetTop(this) + (int)StartPos.Y) / Factor)).GetPathAsync());
-                        Path = Path.Take(5).ToList();     // Follow only 5 than new
+                        Path = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetPath().Take(10).ToList();     // Follow only last 10 points
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine($"<!--     {Color}: Next path!     --!>");
+#endif
                     }
-                    */
-                    // TODO: NOT Finished!!!!!
+#if DEBUG
+                    Point a = this.GetPosition();
+                    Point b = Path[0];
+                    double _distanceX_ = a.X >= b.X ? a.X - b.X : b.X - a.X;
+                    double _distanceY_ = a.Y >= b.Y ? a.Y - b.Y : b.Y - a.Y;
+                    double _distance_ = Math.Sqrt(Math.Pow(_distanceX_, 2) + Math.Pow(_distanceY_, 2));
+                    System.Diagnostics.Debug.WriteLine($"<!-- {Color}: Distance to next path point = {_distance_}. Own Position = {this.GetPosition()}     --!>");
+#endif
+                    // Set direction with path
+                    if (this.GetPosition() != Path[0] && IsOutside)     // Direct to next path point
+                    {
+                        if (this.GetPosition().X > Path[0].X)     // Left
+                            Direction = Direction.Left;
+
+                        else if (this.GetPosition().Y < Path[0].Y)     // Down
+                            Direction = Direction.Down;
+
+                        else if (this.GetPosition().X < Path[0].X)     // Right
+                            Direction = Direction.Right;
+
+                        else if (this.GetPosition().Y > Path[0].Y)     // Up
+                            Direction = Direction.Up;
+                    }
+                    else     // Remove path pont
+                    {
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine($"<!-- {Color}: Next point!     --!>");
+#endif
+                        Path.Remove(Path[0]);
+                        goto PathFinding;
+                    }
 
                     // Direction chage tolerance
                     if (PreviewDirection != Direction.None)
