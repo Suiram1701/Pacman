@@ -21,6 +21,8 @@ namespace Pacman.Figures
     /// </summary>
     public partial class Pacman : UserControl, IFigure
     {
+        public static Pacman Instance { get; private set; }
+
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
@@ -79,7 +81,7 @@ namespace Pacman.Figures
         /// <summary>
         /// Rounds for direction change tolerance (help for player)
         /// </summary>
-        private const int MaxToleranceRounds = 5;
+        private const int MaxToleranceRounds = 7;
 
         /// <summary>
         /// Clicked direction for tolerance
@@ -87,11 +89,12 @@ namespace Pacman.Figures
         private Direction PreviewDirection = Direction.None;
         private int ToleranceRounds = 0;
 
-        public Timer Timer { get; } = new Timer(50);
+        public Timer Timer { get; } = new Timer(20);
 
         public Pacman()
         {
             InitializeComponent();
+            Instance = this;
 
             // Setup keyframes
             ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();
@@ -114,7 +117,6 @@ namespace Pacman.Figures
             // Start
             Story.Begin();
             Timer.Start();
-            return;
         }
 
         #region Animation and movement
@@ -159,24 +161,24 @@ namespace Pacman.Figures
                     switch (Direction)     // Check if figure dont hit a wall and move
                     {
                         case Direction.Left:
-                            if (!IsInField((int)Canvas.GetLeft(this) - 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
+                            if (!IsInField((int)Canvas.GetLeft(this) - 7, (int)Canvas.GetTop(this), (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 10);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) - 5);
                             break;
                         case Direction.Down:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) + 10, (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) + 10);
+                            Canvas.SetTop(this, Canvas.GetTop(this) + 5);
                             break;
                         case Direction.Right:
-                            if (!IsInField((int)Canvas.GetLeft(this) + 10, (int)Canvas.GetTop(this), (int)Height, (int)Width))
+                            if (!IsInField((int)Canvas.GetLeft(this) + 7, (int)Canvas.GetTop(this), (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 10);
+                            Canvas.SetLeft(this, Canvas.GetLeft(this) + 5);
                             break;
                         case Direction.Up:
                             if (!IsInField((int)Canvas.GetLeft(this), (int)Canvas.GetTop(this) - 10, (int)Height, (int)Width))
                                 goto Stop;
-                            Canvas.SetTop(this, Canvas.GetTop(this) - 10);
+                            Canvas.SetTop(this, Canvas.GetTop(this) - 5);
                             break;
                     }
                     Story.Resume();

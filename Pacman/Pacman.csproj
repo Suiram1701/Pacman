@@ -71,11 +71,17 @@
       <DependentUpon>Fruit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Collectable\ICollectable.cs" />
+    <Compile Include="Extension\IFigurecs.cs" />
     <Compile Include="Extension\Image.cs" />
+    <Compile Include="Figures\Ghost.xaml.cs">
+      <DependentUpon>Ghost.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Figures\IFigure.cs" />
     <Compile Include="Figures\Pacman.xaml.cs">
       <DependentUpon>Pacman.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PathFinding\Map.cs" />
+    <Compile Include="PathFinding\PathFinder.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -118,6 +124,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Figures\Ghost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Game.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -148,15 +158,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Style\Textures\Textures.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Textures.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Textures.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Style\Textures\Points.png" />
+    <EmbeddedResource Include="Style\Textures\Points.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Style\Textures\Fruits.png" />
+    <EmbeddedResource Include="Style\Textures\Fruits.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Style\Textures\Ghost.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
