@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using static PathFinding.Map;
+using static Pacman.PathFinding.Map;
 
-namespace PathFinding
+namespace Pacman.PathFinding
 {
     /// <summary>
     /// Help the ghosts to find pacman
@@ -41,7 +41,7 @@ namespace PathFinding
         /// Calculate the shortest path to pacman
         /// </summary>
         /// <returns>Shortest path</returns>
-        public IEnumerable<Point> GetPath()
+        public Point? GetNextPoint()
         {
             // Check which directions are valid
             List<Direction> AvailableDirs = GetDirections(GhostPos).ToList();
@@ -54,56 +54,10 @@ namespace PathFinding
             }
             catch
             {
-                yield break;
+                return null;
             }
      
-            // Setup
-            Point Pos = GhostPos;
-
-            // Set Timeout to calculate
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            while (sw.ElapsedMilliseconds <= 2500)
-            {
-                // First move
-                Pos = CalculateWithDirect(Pos, Direct);
-                // Check which directions are valid
-                List<Direction> AvailableDirects = GetDirections(Pos, Direct).ToList();
-
-                // If near at pacman return
-                IEnumerable<Point> NearPositions = AvailableDirects.Select(Dir => CalculateWithDirect(Pos, Dir));
-                Point NearAtPacman = NearPositions.FirstOrDefault(point => point == PacmanPos);
-
-                if (NearPositions.Any(pos => pos == PacmanPos))
-                {
-                    yield return NearAtPacman;
-                    break;
-                }
-
-                if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count > 1)     // Get shortest direction
-                {
-                    // Get nearest direction to pacman
-                    try
-                    {
-                        Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
-                    }
-                    catch
-                    {
-                        yield break;
-                    }
-
-                    yield return Pos;
-                }
-                else if (AvailableDirects.Any(Dir => Dir != Direct) && AvailableDirects.Count == 1)     // Switch direction on curve
-                {
-                    // Add curve
-                    Direct = AvailableDirects[0];
-                    yield return Pos;
-                }
-                else     // Follow current direction
-                    yield return Pos;
-            }
-            sw.Stop();
+            return CalculateWithDirect(GhostPos, Direct);
         }
 
         /// <summary>

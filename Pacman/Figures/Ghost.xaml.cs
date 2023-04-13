@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 using static Pacman.Game;
-using PathFinding;
+using Pacman.PathFinding;
 using Pacman.Extension;
 using Image = System.Windows.Controls.Image;
 using System.ComponentModel;
@@ -129,16 +129,16 @@ namespace Pacman.Figures
         }
 
         /// <summary>
-        /// Path to follow pacman
+        /// Next point to pacman
         /// </summary>
-        public List<Point> Path = new List<Point>();
+        public Point? Point { get; set; } = null;
 
         /// <summary>
         /// Trigger actions to move ghost
         /// </summary>
         public Timer Timer { get; } = new Timer(25);
 
-        private Stopwatch Sw = new Stopwatch();
+        private readonly Stopwatch Sw = new Stopwatch();
 
         public Ghost()
         {
@@ -186,13 +186,8 @@ namespace Pacman.Figures
                     // If path followed get new path
                     PathFinding:
                     Sw.Start();
-                    if (Path.Count <= 0 && IsOutside)
-                    {
-                        Path = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetPath().Take(10).ToList();     // Follow only last 10 points
-#if DEBUG
-                        System.Diagnostics.Debug.WriteLine($"<!--     {Color}: Next path!     --!>");
-#endif
-                    }
+                    if (Point == null)
+                        Point = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetNextPoint();
 #if DEBUG
                     // If ghost is for more than 1s stuck goto next path point
                     if (Sw.ElapsedMilliseconds > 2500)
@@ -201,30 +196,30 @@ namespace Pacman.Figures
                         System.Diagnostics.Debug.WriteLine($"<!--     {Color}: RESET!     --!>");
 #endif
                         Sw.Reset();
-                        Path.Clear();
+                        Point = null;
                         goto PathFinding;
                     }
 
                     Point a = this.GetPosition();
-                    Point b = Path[0];
+                    Point b = Point ?? throw new ArgumentNullException(nameof(Point));
                     double _distanceX_ = a.X >= b.X ? a.X - b.X : b.X - a.X;
                     double _distanceY_ = a.Y >= b.Y ? a.Y - b.Y : b.Y - a.Y;
                     double _distance_ = Math.Sqrt(Math.Pow(_distanceX_, 2) + Math.Pow(_distanceY_, 2));
                     System.Diagnostics.Debug.WriteLine($"<!-- {Color}: Distance to next path point = {_distance_}. Own Position = {this.GetPosition()}     --!>");
 #endif
                     // Set direction with path
-                    if (this.GetPosition() != Path[0] && IsOutside)     // Direct to next path point
+                    if (this.GetPosition() != Point && IsOutside)     // Direct to next path point
                     {
-                        if (this.GetPosition().X > Path[0].X)     // Left
+                        if (this.GetPosition().X > Point?.X)     // Left
                             Direction = Direction.Left;
 
-                        else if (this.GetPosition().Y < Path[0].Y)     // Down
+                        else if (this.GetPosition().Y < Point?.Y)     // Down
                             Direction = Direction.Down;
 
-                        else if (this.GetPosition().X < Path[0].X)     // Right
+                        else if (this.GetPosition().X < Point?.X)     // Right
                             Direction = Direction.Right;
 
-                        else if (this.GetPosition().Y > Path[0].Y)     // Up
+                        else if (this.GetPosition().Y > Point?.Y)     // Up
                             Direction = Direction.Up;
                     }
                     else     // Remove path pont
@@ -232,7 +227,7 @@ namespace Pacman.Figures
 #if DEBUG
                         System.Diagnostics.Debug.WriteLine($"<!-- {Color}: Next point!     --!>");
 #endif
-                        Path.Remove(Path[0]);
+                        Point = null;
                         Sw.Reset();
                         goto PathFinding;
                     }
@@ -320,7 +315,7 @@ namespace Pacman.Figures
             if (IsAnimated)
             {
                 // Reset all
-                Path.Clear();
+                Point = null;
                 Story.Pause();
                 Timer.Stop();
                 Direction = Direction.None;

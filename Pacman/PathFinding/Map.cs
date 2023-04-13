@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace PathFinding
+namespace Pacman.PathFinding
 {
     /// <summary>
     /// A help map view to see walls
