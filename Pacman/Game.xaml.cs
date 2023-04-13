@@ -348,6 +348,11 @@ namespace Pacman
                         Math.Abs(Canvas.GetTop((UIElement)Object) - (Canvas.GetTop(Pacman)) - 10) <= 20)
                         .ToList();
 
+                    // If pacman eat a energizer he can eat ghosts
+                    if (Items.OfType<Energizer>().Count() > 0)
+                        foreach (Ghost g in Canvas.Children.OfType<Ghost>())
+                            g.IsEatable = true;
+
                     // Add points and remove item
                     foreach (ICollectable Item in Items)
                     {
