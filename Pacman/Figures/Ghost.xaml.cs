@@ -289,7 +289,7 @@ namespace Pacman.Figures
 
             }
         }
-
+         
         public bool IsAnimated { get; set; } = true;
 
         public Storyboard Story { get; } = new Storyboard();
