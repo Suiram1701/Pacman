@@ -570,6 +570,56 @@ namespace Pacman
 
             else if (e.Key == (Key)Default.Control_Up)
                 Pacman.Direction = Direction.Up;
+            else if (e.Key == (Key)Default.Control_Pause)
+                ShowMenu();
         }
+
+        /// <summary>
+        /// Pause game when lost focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_LostFocus(object sender, RoutedEventArgs e) =>
+            ShowMenu();
+
+        #region Menu
+        /// <summary>
+        /// Show pause menu and stop figures
+        /// </summary>
+        private void ShowMenu()
+        {
+            // Stop all
+            Story.Stop();
+            GameLoop.Stop();
+            foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                Figure.Stop();
+
+            Panel.SetZIndex(Menu, 5);
+        }
+
+        /// <summary>
+        /// Hide menu and continue game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Continue_Click(object sender, RoutedEventArgs e)
+        {
+            Panel.SetZIndex(Menu, -1);
+
+            GameLoop.Start();
+            Story.Begin();
+        }
+
+        /// <summary>
+        /// Goto main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void End_Click(object sender, RoutedEventArgs e)
+        {
+            new MainMenu().Show();
+            Close();
+        }
+        #endregion
     }
 }

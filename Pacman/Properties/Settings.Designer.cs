@@ -94,5 +94,17 @@ namespace Pacman.Properties {
                 this["Highscore_sha"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        public int Control_Pause {
+            get {
+                return ((int)(this["Control_Pause"]));
+            }
+            set {
+                this["Control_Pause"] = value;
+            }
+        }
     }
 }
