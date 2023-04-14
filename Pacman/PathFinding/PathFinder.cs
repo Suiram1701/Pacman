@@ -40,23 +40,28 @@ namespace Pacman.PathFinding
         /// <summary>
         /// Calculate the shortest path to pacman
         /// </summary>
+        /// <param name="Hunted"><see langword="true"/> when the ghost want to flee from pacman</param>
         /// <returns>Shortest path</returns>
-        public Point? GetNextPoint()
+        public Point? GetNextPoint(bool Hunted)
         {
             // Check which directions are valid
             List<Direction> AvailableDirs = GetDirections(GhostPos).ToList();
 
             // Get nearest direction to pacman
             Direction Direct;
+            Direction[] Directs;
             try
             {
-                Direct = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray()[0];
+                Directs = AvailableDirs.OrderBy(Dir => GetDistance(CalculateWithDirect(GhostPos, Dir), PacmanPos)).ToArray();
             }
             catch
             {
                 return null;
             }
-     
+
+            // When hunted least direction und when not nearest
+            Direct = Hunted ? Directs[Directs.Length - 1] : Directs[0];
+
             return CalculateWithDirect(GhostPos, Direct);
         }
 

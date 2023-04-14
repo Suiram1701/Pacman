@@ -219,8 +219,10 @@ namespace Pacman.Figures
         /// </summary>
         public void Eated()
         {
+            // Reset
             IsEatable = false;
             _Eated = true;
+            Point = null;
 
             // Change textures
             AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
@@ -289,8 +291,19 @@ namespace Pacman.Figures
                     // If path followed get new path
                     PathFinding:
                     Sw.Start();
-                    if (Point == null)
-                        Point = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetNextPoint();
+                    if (Point == null && !_Eated)
+                        Point = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetNextPoint(IsEatable);
+                    else if (Point == null && _Eated)     // Goto home when eated
+                        Point = new PathFinder(this.GetPosition(), new Point(12, 10)).GetNextPoint(false);
+
+                    // If ghost reached home the ghost can hunt pacman
+                    if (_Eated && Point == new Point(12, 10))
+                    {
+                        // Normal move
+                        _Eated = false;
+                        Point = null;
+                        goto PathFinding;
+                    }
 #if DEBUG
                     // If ghost is for more than 1s stuck goto next path point
                     if (Sw.ElapsedMilliseconds > 2500)
