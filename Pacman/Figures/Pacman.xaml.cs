@@ -26,7 +26,7 @@ namespace Pacman.Figures
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
-        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
+        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 6, 11);
 
         /// <summary>
         /// The current direction of pacman
@@ -194,6 +194,33 @@ namespace Pacman.Figures
             {
 
             }
+        }
+
+        public void DieAnimation()
+        {
+            // Setup animation
+            ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();
+            Animation.Duration = TimeSpan.FromMilliseconds(2200);
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 0], TimeSpan.FromMilliseconds(200)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 1], TimeSpan.FromMilliseconds(400)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 2], TimeSpan.FromMilliseconds(600)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 3], TimeSpan.FromMilliseconds(800)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 4], TimeSpan.FromMilliseconds(1000)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 5], TimeSpan.FromMilliseconds(1200)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 6], TimeSpan.FromMilliseconds(1400)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 7], TimeSpan.FromMilliseconds(1600)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 8], TimeSpan.FromMilliseconds(1800)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 9], TimeSpan.FromMilliseconds(2000)));
+            Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 10], TimeSpan.FromMilliseconds(2200)));
+
+            Storyboard Story = new Storyboard();
+            Story.Children.Add(Animation);
+            Storyboard.SetTarget(Animation, Texture);
+            Storyboard.SetTargetProperty(Animation, new PropertyPath(Image.SourceProperty));
+
+            // Start
+            Stop();
+            Story.Begin();
         }
 
         public bool IsAnimated { get; set; } = true;

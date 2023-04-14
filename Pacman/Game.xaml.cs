@@ -236,7 +236,13 @@ namespace Pacman
         /// </summary>
         private void PacmanLose()
         {
+            // Stop all
+            foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                Figure.Stop();
 
+            Pacman.DieAnimation();
+
+            Task.Delay(2200);
         }
 
         #region Points
