@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Pacman" Height="885" Width="690" ResizeMode="NoResize" Icon="/Style/Icon/Icon32px.ico"
-        KeyUp="Window_KeyUp" LostFocus="Window_LostFocus" Background="Black">
+        KeyUp="Window_KeyUp" Background="Black">
     <Canvas>
         <Label Content="Score: " Foreground="White" Canvas.Left="80" Canvas.Top="15" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label x:Name="CPoints" Content="0" Canvas.Left="154" Canvas.Top="14" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Height="38" Width="86" Foreground="White"/>

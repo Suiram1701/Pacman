@@ -154,6 +154,7 @@ namespace Pacman
                 Figure.Start();
 
             // Let the ghosts out
+            _GhostsGoOutAsyncCancel = new CancellationTokenSource();
             await GhostsGoOutAsync();
         }
 
@@ -198,6 +199,11 @@ namespace Pacman
         }
 
         /// <summary>
+        /// Cancel ghost go out when restart
+        /// </summary>
+        private CancellationTokenSource _GhostsGoOutAsyncCancel;
+
+        /// <summary>
         /// Activate ghost go outside animation
         /// </summary>
         private async Task GhostsGoOutAsync()
@@ -206,6 +212,9 @@ namespace Pacman
             {
                 // Give all ghosts the path in order
                 Thread.Sleep(5000);
+                if (_GhostsGoOutAsyncCancel.IsCancellationRequested)
+                    return;
+
                 Dispatcher.Invoke(() =>
                 {
                     Canvas.SetLeft(Purple, 317);
@@ -214,6 +223,9 @@ namespace Pacman
                 }, DispatcherPriority.Loaded);
 
                 Thread.Sleep(5000);
+                if (_GhostsGoOutAsyncCancel.IsCancellationRequested)
+                    return;
+
                 Dispatcher.Invoke(() =>
                 {
                     Canvas.SetLeft(Cyan, 317);
@@ -222,6 +234,9 @@ namespace Pacman
                 }, DispatcherPriority.Loaded);
 
                 Thread.Sleep(5000);
+                if (_GhostsGoOutAsyncCancel.IsCancellationRequested)
+                    return;
+
                 Dispatcher.Invoke(() =>
                 {
                     Canvas.SetLeft(Orange, 317);
@@ -236,13 +251,23 @@ namespace Pacman
         /// </summary>
         private void PacmanLose()
         {
-            // Stop all
+            // Stop all and reset
             GameLoop.Stop();
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
                 Figure.Stop();
 
+            _GhostsGoOutAsyncCancel.Cancel();
+            GC.Collect();
+
             Pacman.DieAnimation((sender, e) =>
             {
+                // Reset and stop all figures
+                foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                    Figure.Reset();
+
+                foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
+                    Figure.Stop();
+
                 // Init map
                 ResetFigures();
                 ResetPoints();
@@ -390,9 +415,9 @@ namespace Pacman
                     // If ghost eatable eat and when not lose
                     foreach (Ghost g in Ghosts)
                     {
-                        if (!g.IsEatable)
+                        if (!g.IsEatable && !g.IsEated)
                             PacmanLose();
-                        else
+                        else if (!g.IsEated)
                         {
                             // If too high no more points
                             if (s_EatedGhostsPoints > 1600)
@@ -586,14 +611,6 @@ namespace Pacman
             else if (e.Key == (Key)Default.Control_Pause)
                 ShowMenu();
         }
-
-        /// <summary>
-        /// Pause game when lost focus
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_LostFocus(object sender, RoutedEventArgs e) =>
-            ShowMenu();
 
         #region Menu
         /// <summary>

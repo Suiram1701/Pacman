@@ -74,7 +74,7 @@ namespace Pacman.Style
             get
             {
                 int index = Row * Colomns + Colomn;
-                if (index >= Bitmaps.Count())
+                if (index >= Bitmaps.Count() || index < 0)
                     return null;
                 return Bitmaps[index];
             }

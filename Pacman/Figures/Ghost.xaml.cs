@@ -57,8 +57,8 @@ namespace Pacman.Figures
                 SetValue(ColorProperty, value);
 
                 // Update texture
-                AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)value : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
-                AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)value : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
+                AnimationKeyFrames[0].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)value : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+                AnimationKeyFrames[1].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)value : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
             }
         }
 
@@ -92,16 +92,16 @@ namespace Pacman.Figures
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)value - 1 : !_CurrentWhite ? 0 : 2) : (int)value + 3];
-                    AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)value + 3 : !_CurrentWhite ? 1 : 3) : (int)value + 3];
+                    AnimationKeyFrames[0].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)value - 1 : !_CurrentWhite ? 0 : 2) : (int)value + 3];
+                    AnimationKeyFrames[1].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)value + 3 : !_CurrentWhite ? 1 : 3) : (int)value + 3];
                     Story.Begin();
                 }
                 else
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? 1 : !_CurrentWhite ? 0 : 2) : 5];
-                    AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? 5 : !_CurrentWhite ? 1 : 3) : 5];
+                    AnimationKeyFrames[0].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? 1 : !_CurrentWhite ? 0 : 2) : 5];
+                    AnimationKeyFrames[1].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? 5 : !_CurrentWhite ? 1 : 3) : 5];
                     Story.Begin();
                 }
             }
@@ -138,8 +138,8 @@ namespace Pacman.Figures
                 SetValue(IsEatableProperty, value);
 
                 // Change tetxure
-                AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
-                AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
+                AnimationKeyFrames[0].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+                AnimationKeyFrames[1].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
 
                 // If starting start timer
                 if (!value)
@@ -212,7 +212,7 @@ namespace Pacman.Figures
         /// <summary>
         /// Is the ghost eated and must go to the house
         /// </summary>
-        private bool _Eated = false;
+        public bool IsEated = false;
 
         /// <summary>
         /// Respawm the ghost
@@ -221,12 +221,12 @@ namespace Pacman.Figures
         {
             // Reset
             IsEatable = false;
-            _Eated = true;
+            IsEated = true;
             Point = null;
 
             // Change textures
-            AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
-            AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
+            AnimationKeyFrames[0].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+            AnimationKeyFrames[1].Value = TextureHelper[!IsEated ? (!IsEatable ? (int)Color : 4) : 4, !IsEated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
         }
         #endregion
 
@@ -277,9 +277,15 @@ namespace Pacman.Figures
         {
             // Reset
             IsEatable = false;
-            _Eated = false;
+            IsEated = false;
             s_EatedGhostsPoints = 200;
             Point = null;
+
+            // Start ghost
+            if (Color == Colors.Red)
+                IsOutside = true;
+            else
+                IsOutside = false;
 
             // Reset texture
             AnimationKeyFrames[0].Value = TextureHelper[(int)Color, 1];
@@ -304,16 +310,16 @@ namespace Pacman.Figures
                     // If path followed get new path
                     PathFinding:
                     Sw.Start();
-                    if (Point == null && !_Eated)
+                    if (Point == null && !IsEated)
                         Point = new PathFinder(this.GetPosition(), Pacman.Instance.GetPosition()).GetNextPoint(IsEatable);
-                    else if (Point == null && _Eated)     // Goto home when eated
+                    else if (Point == null && IsEated)     // Goto home when eated
                         Point = new PathFinder(this.GetPosition(), new Point(12, 10)).GetNextPoint(false);
 
                     // If ghost reached home the ghost can hunt pacman
-                    if (_Eated && Point == new Point(12, 10))
+                    if (IsEated && Point == new Point(12, 10))
                     {
                         // Normal move
-                        _Eated = false;
+                        IsEated = false;
                         Point = null;
                         goto PathFinding;
                     }
