@@ -48,5 +48,10 @@ namespace Pacman.Figures
         /// Stop animation and movement
         /// </summary>
         void Stop();
+
+        /// <summary>
+        /// Reset the figure
+        /// </summary>
+        void Reset();
     }
 }

@@ -120,6 +120,19 @@ namespace Pacman.Figures
             Timer.Start();
         }
 
+        void IFigure.Reset()
+        {
+            // Reset
+            _IsDying = false;
+            ToleranceRounds = 0;
+
+            // Reset Direct and texture
+            Direction = Direction.None;
+            AnimationKeyFrames[0].Value = TextureHelper[0, 0];
+            AnimationKeyFrames[1].Value = TextureHelper[0, 0];
+            AnimationKeyFrames[2].Value = TextureHelper[0, 0];
+        }
+
         #region Animation and movement
         /// <summary>
         /// Movefigure

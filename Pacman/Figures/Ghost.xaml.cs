@@ -273,6 +273,19 @@ namespace Pacman.Figures
             Timer.Start();
         }
 
+        void IFigure.Reset()
+        {
+            // Reset
+            IsEatable = false;
+            _Eated = false;
+            s_EatedGhostsPoints = 200;
+            Point = null;
+
+            // Reset texture
+            AnimationKeyFrames[0].Value = TextureHelper[(int)Color, 1];
+            AnimationKeyFrames[1].Value = TextureHelper[(int)Color, 5];
+        }
+
         #region Animation and movement
         /// <summary>
         /// Movefigure
