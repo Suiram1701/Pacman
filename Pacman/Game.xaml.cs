@@ -231,6 +231,14 @@ namespace Pacman
             });
         }
 
+        /// <summary>
+        /// Lose animation and reset
+        /// </summary>
+        private void PacmanLose()
+        {
+
+        }
+
         #region Points
         /// <summary>
         /// Summon all points new on map
@@ -359,6 +367,32 @@ namespace Pacman
                         Points += (int)Item.Point;
                         Canvas.Children.Remove((UIElement)Item);
                     }
+
+                    // All ghosts in pacman
+                    IEnumerable<Ghost> Ghosts = Canvas.Children.OfType<Ghost>()
+                        .Where(Object => Math.Abs(Canvas.GetLeft(Object) - (Canvas.GetLeft(Pacman) - 10)) <= 20 &&
+                        Math.Abs(Canvas.GetTop(Object) - (Canvas.GetTop(Pacman) - 10)) <= 20)
+                        .ToList();
+
+                    // If ghost eatable eat and when not lose
+                    foreach (Ghost g in Ghosts)
+                    {
+                        if (!g.IsEatable)
+                            PacmanLose();
+                        else
+                        {
+                            // If too high no more points
+                            if (s_EatedGhostsPoints > 1600)
+                                return;
+
+                            g.Eated();
+
+                            // Add points and set points higher
+                            Points += s_EatedGhostsPoints;
+                            s_EatedGhostsPoints *= 2;
+                        }
+                    }
+
                 }, DispatcherPriority.Loaded);
             }
             catch (TaskCanceledException)
@@ -366,6 +400,11 @@ namespace Pacman
 
             }
         }
+
+        /// <summary>
+        /// Ghosts eated in this attemp (their points to get next points)
+        /// </summary>
+        public static int s_EatedGhostsPoints = 200;
 
         /// <summary>
         /// Check if level is done

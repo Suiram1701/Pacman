@@ -57,8 +57,8 @@ namespace Pacman.Figures
                 SetValue(ColorProperty, value);
 
                 // Update texture
-                AnimationKeyFrames[0].Value = TextureHelper[!IsEatable ? (int)value : 4, !IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2];
-                AnimationKeyFrames[1].Value = TextureHelper[!IsEatable ? (int)value : 4, !IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3];
+                AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)value : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+                AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)value : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
             }
         }
 
@@ -92,16 +92,16 @@ namespace Pacman.Figures
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? (int)value - 1 : !_CurrentWhite ? 0 : 2];
-                    AnimationKeyFrames[1].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? (int)value + 3 : !_CurrentWhite ? 1 : 3];
+                    AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)value - 1 : !_CurrentWhite ? 0 : 2) : (int)value + 3];
+                    AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)value + 3 : !_CurrentWhite ? 1 : 3) : (int)value + 3];
                     Story.Begin();
                 }
                 else
                 {
                     // Replace key frames and reload animation
                     Story.Stop();
-                    AnimationKeyFrames[0].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? 1 : !_CurrentWhite ? 0 : 2];
-                    AnimationKeyFrames[1].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? 5 : !_CurrentWhite ? 1 : 3];
+                    AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? 1 : !_CurrentWhite ? 0 : 2) : 5];
+                    AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? 5 : !_CurrentWhite ? 1 : 3) : 5];
                     Story.Begin();
                 }
             }
@@ -138,14 +138,14 @@ namespace Pacman.Figures
                 SetValue(IsEatableProperty, value);
 
                 // Change tetxure
-                AnimationKeyFrames[0].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? (int)Direction - 1 : 0];
-                AnimationKeyFrames[1].Value = TextureHelper[!IsEatable ? (int)Color : 4, !IsEatable ? (int)Direction + 3 : 1];
+                AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+                AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
 
                 // If starting start timer
-                if (value)
-                    _EatTimer.Start();
-                else
+                if (!value)
                     _EatTimer.Stop();
+                else
+                    _EatTimer.Start();
             }
         }
 
@@ -176,6 +176,9 @@ namespace Pacman.Figures
                 // End state after 5s
                 if (_EatTriggerd > 5)
                 {
+                    // Reset given points
+                    s_EatedGhostsPoints = 200;
+
                     // Reset
                     _EatTriggerd = 0;
 
@@ -206,6 +209,23 @@ namespace Pacman.Figures
                 _EatTriggerd++;
             });
 
+        /// <summary>
+        /// Is the ghost eated and must go to the house
+        /// </summary>
+        private bool _Eated = false;
+
+        /// <summary>
+        /// Respawm the ghost
+        /// </summary>
+        public void Eated()
+        {
+            IsEatable = false;
+            _Eated = true;
+
+            // Change textures
+            AnimationKeyFrames[0].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction - 1 : !_CurrentWhite ? 0 : 2) : (int)Direction + 3];
+            AnimationKeyFrames[1].Value = TextureHelper[!_Eated ? (!IsEatable ? (int)Color : 4) : 4, !_Eated ? (!IsEatable ? (int)Direction + 3 : !_CurrentWhite ? 1 : 3) : (int)Direction + 3];
+        }
         #endregion
 
         /// <summary>
