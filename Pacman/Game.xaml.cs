@@ -1,5 +1,4 @@
-﻿using Pacman.Extension;
-using Pacman.Style;
+﻿using Pacman.Style;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,26 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Pacman.Collectable;
-using System.Windows.Data;
-using System.Windows.Documents;
-using Control = System.Windows;
+using Control = System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using static Pacman.Properties.Settings;
 using Pacman.Figures;
 using Pacman.Style.Textures;
-using System.IO;
 using Point = System.Drawing.Point;
 using System.Windows;
 using System.Timers;
 using System.Windows.Threading;
-using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Threading;
 using Timer = System.Timers.Timer;
 using System.Windows.Media.Animation;
-using System.Windows.Media.TextFormatting;
-using PointD = System.Windows.Point;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Pacman
 {
@@ -93,6 +87,8 @@ namespace Pacman
         /// </summary>
         private int LevelPoints { get; set; } = 0;
 
+        private int Lifes = 5;
+
         /// <summary>
         /// Timer for some mechanics
         /// </summary>
@@ -102,6 +98,11 @@ namespace Pacman
         /// Countdown animation animation
         /// </summary>
         private readonly Storyboard Story = new Storyboard();
+
+        /// <summary>
+        /// Texturehelper for lifebar
+        /// </summary>
+        private static readonly TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 5, 2);
 
         public Game()
         {
@@ -131,6 +132,13 @@ namespace Pacman
             Storyboard.SetTarget(Animation, Counter);
             Storyboard.SetTargetProperty(Animation, new PropertyPath(ContentProperty));
             Story.Completed += Counter_Completet;
+
+            // Setup lifebar
+            L1.Source = TextureHelper[1, 0];
+            L2.Source = TextureHelper[1, 0];
+            L3.Source = TextureHelper[1, 0];
+            L4.Source = TextureHelper[1, 0];
+            L5.Source = TextureHelper[1, 0];
 
             // Init map
             ResetFigures();
@@ -247,10 +255,31 @@ namespace Pacman
         }
 
         /// <summary>
+        /// Fix the bug that too many window open
+        /// </summary>
+        private bool _IsCalled = false;
+
+        /// <summary>
         /// Lose animation and reset
         /// </summary>
         private void PacmanLose()
         {
+            if (_IsCalled)
+                return;
+
+            if (Lifes == 1)
+            {
+                _IsCalled = true;
+                MessageBox.Show("You lose!");
+                new MainMenu().Show();
+                Close();
+            }
+
+            // Subtract a life
+            Control.Image Img = (Control.Image)FindName("L" + Lifes);
+            Img.Source = null;
+            Lifes--;
+
             // Stop all and reset
             GameLoop.Stop();
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
