@@ -13,6 +13,7 @@ using Pacman.Style.Textures;
 using System.Threading;
 using Timer = System.Timers.Timer;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Pacman.Figures
 {
@@ -37,7 +38,7 @@ namespace Pacman.Figures
             get => (Direction)GetValue(DirectionProperty);
             set
             {
-                if (!IsAnimated)
+                if (!IsAnimated && _IsDying)
                     return;
 
                 int PreviewX = (int)Canvas.GetLeft(this) + (value == Direction.Left ? -20 : value == Direction.Right ? +20 : 0);     // X Position to check direction
@@ -131,6 +132,9 @@ namespace Pacman.Figures
             {
                 Dispatcher.Invoke(() =>
                 {
+                    if (_IsDying)
+                        return;
+
                     // Direction chage tolerance
                     if (PreviewDirection != Direction.None)
                     {
@@ -196,11 +200,12 @@ namespace Pacman.Figures
             }
         }
 
-        public void DieAnimation()
+        private bool _IsDying = false;
+        public void DieAnimation(EventHandler Competed)
         {
             // Setup animation
             ObjectAnimationUsingKeyFrames Animation = new ObjectAnimationUsingKeyFrames();
-            Animation.Duration = TimeSpan.FromMilliseconds(2200);
+            Animation.Duration = TimeSpan.FromMilliseconds(2400);
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 0], TimeSpan.FromMilliseconds(200)));
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 1], TimeSpan.FromMilliseconds(400)));
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 2], TimeSpan.FromMilliseconds(600)));
@@ -212,6 +217,7 @@ namespace Pacman.Figures
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 8], TimeSpan.FromMilliseconds(1800)));
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 9], TimeSpan.FromMilliseconds(2000)));
             Animation.KeyFrames.Add(new DiscreteObjectKeyFrame(TextureHelper[5, 10], TimeSpan.FromMilliseconds(2200)));
+            Animation.Completed += Competed;
 
             Storyboard Story = new Storyboard();
             Story.Children.Add(Animation);
@@ -219,6 +225,7 @@ namespace Pacman.Figures
             Storyboard.SetTargetProperty(Animation, new PropertyPath(Image.SourceProperty));
 
             // Start
+            _IsDying = true;
             Stop();
             Story.Begin();
         }

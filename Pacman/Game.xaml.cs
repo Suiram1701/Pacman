@@ -237,12 +237,19 @@ namespace Pacman
         private void PacmanLose()
         {
             // Stop all
+            GameLoop.Stop();
             foreach (IFigure Figure in Canvas.Children.OfType<IFigure>())
                 Figure.Stop();
 
-            Pacman.DieAnimation();
+            Pacman.DieAnimation((sender, e) =>
+            {
+                // Init map
+                ResetFigures();
+                ResetPoints();
+                Story.Begin();
 
-            Task.Delay(2200);
+                GameLoop.Start();
+            });
         }
 
         #region Points
