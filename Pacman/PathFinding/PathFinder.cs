@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using static Pacman.PathFinding.Map;
 
@@ -19,7 +14,7 @@ namespace Pacman.PathFinding
         /// <summary>
         /// Own pos to calculate
         /// </summary>
-        private readonly Point GhostPos ;
+        private readonly Point GhostPos;
 
         /// <summary>
         /// Target pos to calculate

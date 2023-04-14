@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pacman.Collectable
+﻿namespace Pacman.Collectable
 {
     /// <summary>
     /// All possible points from points and fruits

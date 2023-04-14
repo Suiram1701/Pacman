@@ -1,19 +1,16 @@
 ﻿using Pacman.Style;
+using Pacman.Style.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Timers;
 using System.Windows.Threading;
 using static Pacman.Game;
-using Pacman.Style.Textures;
-using System.Threading;
 using Timer = System.Timers.Timer;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 namespace Pacman.Figures
 {
@@ -27,7 +24,7 @@ namespace Pacman.Figures
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
-        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 6, 11);
+        private static readonly TextureHelper TextureHelper = new TextureHelper(Textures.Pacman, 22, 22, 6, 11);
 
         /// <summary>
         /// The current direction of pacman
@@ -152,7 +149,7 @@ namespace Pacman.Figures
                     if (PreviewDirection != Direction.None)
                     {
                         int PreviewX = (int)Canvas.GetLeft(this) + (PreviewDirection == Direction.Left ? -20 : PreviewDirection == Direction.Right ? +20 : 0);     // X Position to check tolerance direction
-                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20: PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
+                        int PreviewY = (int)Canvas.GetTop(this) + (PreviewDirection == Direction.Up ? -20 : PreviewDirection == Direction.Down ? +20 : 0);     // Y Position to check tolerance direction
 
                         // Check if tolerance is valid
                         if (IsInField(PreviewX, PreviewY, (int)Height, (int)Width))

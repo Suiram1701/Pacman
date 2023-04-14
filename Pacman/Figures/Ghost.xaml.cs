@@ -1,29 +1,20 @@
-﻿using Pacman.Style.Textures;
+﻿using Pacman.Extension;
+using Pacman.PathFinding;
 using Pacman.Style;
+using Pacman.Style.Textures;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Media.TextFormatting;
 using System.Windows.Threading;
 using static Pacman.Game;
-using Pacman.PathFinding;
-using Pacman.Extension;
 using Image = System.Windows.Controls.Image;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace Pacman.Figures
 {
@@ -46,7 +37,7 @@ namespace Pacman.Figures
         /// <summary>
         /// A Texture helper to manage figures textures
         /// </summary>
-        private readonly static TextureHelper TextureHelper = new TextureHelper(Textures.Ghost, 14, 14, 5, 8);
+        private static readonly TextureHelper TextureHelper = new TextureHelper(Textures.Ghost, 14, 14, 5, 8);
 
         public static readonly DependencyProperty ColorProperty = DependencyProperty.Register("Color", typeof(Colors), typeof(Ghost), new PropertyMetadata(Colors.Red));
         public Colors Color
@@ -129,7 +120,7 @@ namespace Pacman.Figures
         }
 
         #region Eatable
-        public static readonly DependencyProperty IsEatableProperty = DependencyProperty.Register("IsEatable", typeof(bool), typeof (Ghost), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsEatableProperty = DependencyProperty.Register("IsEatable", typeof(bool), typeof(Ghost), new PropertyMetadata(false));
         public bool IsEatable
         {
             get => (bool)GetValue(IsEatableProperty);
@@ -436,7 +427,7 @@ namespace Pacman.Figures
 
             }
         }
-         
+
         public bool IsAnimated { get; set; } = true;
 
         public Storyboard Story { get; } = new Storyboard();

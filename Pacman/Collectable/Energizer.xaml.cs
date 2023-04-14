@@ -1,20 +1,9 @@
 ﻿using Pacman.Style;
 using Pacman.Style.Textures;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pacman.Collectable
 {
@@ -25,7 +14,7 @@ namespace Pacman.Collectable
     {
         private static readonly TextureHelper TextureHelper = new TextureHelper(Textures.Points, 12, 12, 1, 3);
 
-        private Storyboard Story = new Storyboard();
+        private readonly Storyboard Story = new Storyboard();
 
         Points ICollectable.Point => Points.P50;
 

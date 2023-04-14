@@ -1,27 +1,25 @@
-﻿using Pacman.Style;
+﻿using Pacman.Collectable;
+using Pacman.Figures;
+using Pacman.Style;
+using Pacman.Style.Textures;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using Pacman.Collectable;
-using Control = System.Windows.Controls;
-using System.Windows.Input;
-using static Pacman.Properties.Settings;
-using Pacman.Figures;
-using Pacman.Style.Textures;
-using Point = System.Drawing.Point;
-using System.Windows;
-using System.Timers;
-using System.Windows.Threading;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
-using Timer = System.Timers.Timer;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Diagnostics;
-using System.Reflection;
+using System.Windows.Threading;
+using static Pacman.Properties.Settings;
+using Control = System.Windows.Controls;
+using Point = System.Drawing.Point;
+using Timer = System.Timers.Timer;
 
 namespace Pacman
 {
@@ -215,7 +213,7 @@ namespace Pacman
         /// Activate ghost go outside animation
         /// </summary>
         private async Task GhostsGoOutAsync()
-        {   
+        {
             await Task.Run(() =>
             {
                 // Give all ghosts the path in order
@@ -358,7 +356,7 @@ namespace Pacman
         /// <param name="Type">Fruit to spawn</param>
         private void SpawnFruit(Fruit.Fruits Type)
         {
-            Spawn:
+        Spawn:
             // Random Position
             Random Rnd = new Random();
             int RndY = Rnd.Next(PointSpawning.Length);
@@ -380,7 +378,7 @@ namespace Pacman
             int RndX = ValidX[Rnd.Next(ValidX.Count)];
 
             // Calc spawn position
-            Point SpawnPosition = new Point(20 + (RndX * Distance) , 19 + (RndY * Distance));
+            Point SpawnPosition = new Point(20 + (RndX * Distance), 19 + (RndY * Distance));
 
             // Add fruit and positioning it
             int Index = Canvas.Children.Add(new Fruit()
@@ -419,8 +417,8 @@ namespace Pacman
                 {
                     // Check distance and get near item
                     IEnumerable<ICollectable> Items = Canvas.Children.OfType<ICollectable>()
-                        .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - (Canvas.GetLeft(Pacman)) - 10) <= 20 &&
-                        Math.Abs(Canvas.GetTop((UIElement)Object) - (Canvas.GetTop(Pacman)) - 10) <= 20)
+                        .Where(Object => Math.Abs(Canvas.GetLeft((UIElement)Object) - Canvas.GetLeft(Pacman) - 10) <= 20 &&
+                        Math.Abs(Canvas.GetTop((UIElement)Object) - Canvas.GetTop(Pacman) - 10) <= 20)
                         .ToList();
 
                     // If pacman eat a energizer he can eat ghosts
@@ -488,7 +486,7 @@ namespace Pacman
                     Random Rnd = new Random();
                     if (LevelPoints >= 1320 && !FruitSpawned)
                     {
-                        SpawnFruit(Level -1  <= 7 ? (Fruit.Fruits)(Level - 1) : (Fruit.Fruits)Rnd.Next(5));
+                        SpawnFruit(Level - 1 <= 7 ? (Fruit.Fruits)(Level - 1) : (Fruit.Fruits)Rnd.Next(5));
                         FruitSpawned = true;
                     }
 

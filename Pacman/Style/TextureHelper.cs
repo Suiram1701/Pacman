@@ -1,12 +1,8 @@
 ﻿using Pacman.Extension;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Pacman.Style
@@ -73,7 +69,7 @@ namespace Pacman.Style
         {
             get
             {
-                int index = Row * Colomns + Colomn;
+                int index = (Row * Colomns) + Colomn;
                 if (index >= Bitmaps.Count() || index < 0)
                     return null;
                 return Bitmaps[index];
