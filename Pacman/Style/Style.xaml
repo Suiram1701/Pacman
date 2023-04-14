@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Styles -->
+    <Style TargetType="{x:Type Label}" x:Key="Text">
+        <Setter Property="FontFamily" Value="Arial Black"/>
+    </Style>
+</ResourceDictionary>
