@@ -143,9 +143,21 @@ namespace Pacman.Figures
 
                 // If starting start timer
                 if (!value)
+                {
+                    Timer.Stop();
+                    Timer.Interval = 25;
+                    Timer.Start();
+
                     _EatTimer.Stop();
+                }
                 else
+                {
+                    Timer.Stop();
+                    Timer.Interval = 35;
+                    Timer.Start();
+
                     _EatTimer.Start();
+                }
             }
         }
 
